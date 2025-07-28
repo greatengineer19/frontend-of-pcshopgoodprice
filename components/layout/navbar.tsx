@@ -83,7 +83,7 @@ export function Navbar() {
                         </span>
                     </Link>
                     <div className="flex-grow flex items-center justify-center">
-                        <div className="text-center text-sm text-muted-foreground"> Loading user data... </div>
+                        <div className="text-center text-sm text-muted-foreground"> Loading user data OR pcshopgoodprice.com/test_api to populate 1st time data... </div>
                     </div>
                 </div>
             </div>
