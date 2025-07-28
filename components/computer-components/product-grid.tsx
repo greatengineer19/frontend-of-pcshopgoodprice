@@ -17,7 +17,7 @@ export function ProductGrid({ setIsDialogOpen, setIsEditMode, setSelectedProduct
 	const { setOnEditProduct } = useOnEditProduct()
 
     const handleProductClick = async (product: ProductInFrontend) => {
-		const response = await fetch("http://localhost:80/api/computer-components/" + product.id);
+		const response = await fetch(`http://${process.env.NEXT_PUBLIC_API_URL}/api/computer-components/${product.id}`);
 		const productResponse: ProductInFrontend = await response.json();
 
 		setOnEditProduct({

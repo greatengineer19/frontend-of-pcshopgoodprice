@@ -4,9 +4,6 @@ import type {
     ShopContentProduct,
     ProductFilter
 } from "@/types/product"
-import { useToastError } from "@/hooks/use-toast-error"
-import { handleApiError } from "@/utils/api/error-handlers"
-import { toast } from "sonner"
 import { ProductCategory } from "@/types/computer-component-category"
 const SECRET_KEY_NAME = 'secret_key';
 
@@ -28,7 +25,7 @@ export const fetchProducts = async (filters?: ProductFilter): Promise<{ result: 
         queryString = '?' + new URLSearchParams(query_params).toString();
     }
     
-    let response = await fetch("http://localhost:80/api/sellable-products" + queryString, {
+    let response = await fetch(`http://${process.env.NEXT_PUBLIC_API_URL}/api/sellable-products${queryString}`, {
         headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${token}`
@@ -54,7 +51,7 @@ export const fetchProductBySlug = async (slug: string): Promise<ShopContentProdu
     if (typeof window !== "undefined") {
         token = localStorage.getItem(SECRET_KEY_NAME);
     }
-    let response = await fetch("http://localhost:80/api/sellable-products/" + slug, {
+    let response = await fetch(`http://${process.env.NEXT_PUBLIC_API_URL}/api/sellable-products/${slug}`, {
         headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${token}`
@@ -73,7 +70,7 @@ export const fetchProductBySlug = async (slug: string): Promise<ShopContentProdu
 
 // Fetch product categories
 export const fetchProductCategories = async (): Promise<ProductCategory[]> => {
-    let response = await fetch("http://localhost:80/api/computer-component-categories");
+    let response = await fetch(`http://${process.env.NEXT_PUBLIC_API_URL}/api/computer-component-categories`);
 
     if (!response.ok) {
         const errorText = await response.text();
@@ -89,7 +86,7 @@ export const fetchProductCategories = async (): Promise<ProductCategory[]> => {
 // Fetch product brands
 export const fetchProductBrands = async (): Promise<ProductBrand[]> => {
     return [];
-    const response = await fetch('http://localhost:80/api/product-brands');
+    const response = await fetch(`http://${process.env.NEXT_PUBLIC_API_URL}/api/product-brands`);
 
     if (!response.ok) {
         const errorText = await response.text();
