@@ -160,7 +160,7 @@ export function ProductViewModal(
                 computer_component_sell_price_settings_attributes: tempSellPrices
             };
     
-            const response = await fetch(`http://${process.env.NEXT_PUBLIC_API_URL}/api/computer-components/${onEditProduct.id}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/computer-components/${onEditProduct.id}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json'

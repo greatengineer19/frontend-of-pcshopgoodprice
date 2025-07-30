@@ -24,7 +24,7 @@ export const createSalesInvoice = async (
         sales_quote_no: sales_quote_no
     }
 
-    const response = await fetch(`http://${process.env.NEXT_PUBLIC_API_URL}/api/sales-invoices`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/sales-invoices`, {
         method: 'POST',
         body: JSON.stringify(salesInvoiceParam),
         headers: {
@@ -49,7 +49,7 @@ export const voidSalesInvoice = async (id: number): Promise<any> => {
         }
 
         const response = await fetch(
-            `http://${process.env.NEXT_PUBLIC_API_URL}/api/sales-invoices/${id}/void`,
+            `${process.env.NEXT_PUBLIC_API_URL}/api/sales-invoices/${id}/void`,
             {
                 method: 'PATCH',
                 headers: {
@@ -77,7 +77,7 @@ export const fetchSalesInvoices = async (): Promise<SalesInvoice[]> => {
         token = localStorage.getItem(SECRET_KEY_NAME);
     }
 
-    const response = await fetch(`http://${process.env.NEXT_PUBLIC_API_URL}/api/sales-invoices`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/sales-invoices`, {
         headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${token}`

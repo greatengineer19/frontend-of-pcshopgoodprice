@@ -14,7 +14,7 @@ export function useProducts() {
 			try {
 				console.log("Hahahaha")
 				console.log(process.env)
-				const response = await fetch(`http://${process.env.NEXT_PUBLIC_API_URL}/api/computer-components`);
+				const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/computer-components`);
 				
 				if (!response.ok) {
 					await handleApiError(response, showErrorToast);

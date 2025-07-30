@@ -13,7 +13,7 @@ export function useInboundDeliveries() {
     useEffect(() => {
         const loadInboundDeliveries = async () => {
             try {
-                const response = await fetch(`http://${process.env.NEXT_PUBLIC_API_URL}/api/inbound-deliveries`)
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/inbound-deliveries`)
 
                 if (!response.ok) {
                     await handleApiError(response, showErrorToast);

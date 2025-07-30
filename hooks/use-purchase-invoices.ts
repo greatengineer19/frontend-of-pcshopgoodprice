@@ -14,7 +14,7 @@ export function usePurchaseInvoices() {
     useEffect(() => {
         const loadInvoices = async () => {
             try {
-                const response = await fetch(`http://${process.env.NEXT_PUBLIC_API_URL}/api/purchase-invoices`)
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/purchase-invoices`)
 
                 if (!response.ok) {
                     await handleApiError(response, showErrorToast);

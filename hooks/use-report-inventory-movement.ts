@@ -54,7 +54,7 @@ export function useReportInventoryMovement() {
             }
 
             const queryString = '?' + new URLSearchParams(query_params).toString();
-            const response = await fetch(`http://${process.env.NEXT_PUBLIC_API_URL}/api/report/inventory-movement${queryString}`)
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/report/inventory-movement${queryString}`)
             if (!response.ok) {
                 await handleApiError(response, showErrorToast);
                 return;

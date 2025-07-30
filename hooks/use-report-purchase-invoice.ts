@@ -55,7 +55,7 @@ export function useReportPurchaseInvoice() {
             }
 
             const queryString = '?' + new URLSearchParams(query_params).toString();
-            const response = await fetch(`http://${process.env.NEXT_PUBLIC_API_URL}/report/purchase-invoice${queryString}`)
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/report/purchase-invoice${queryString}`)
 
             if (!response.ok) {
                 await handleApiError(response, showErrorToast);

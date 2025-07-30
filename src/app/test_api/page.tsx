@@ -10,7 +10,7 @@ export default function Page() {
 	const [data, setData] = useState<BackendMessage | null>(null);
 
 	useEffect(() => {
-		fetch(`http://${process.env.NEXT_PUBLIC_API_URL}/api/first-time-seeds`)
+		fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/first-time-seeds`)
 			.then((res) => res.json())
 			.then((data) => setData(data))
 			.catch((err) => console.error(err));

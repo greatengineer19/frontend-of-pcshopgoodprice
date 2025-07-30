@@ -6,7 +6,7 @@ const SECRET_KEY_NAME = 'secret_key';
 
 // Payment methods
 export const listPaymentMethods = async (): Promise<PaymentMethod[]> => {
-    const response = await fetch(`http://${process.env.NEXT_PUBLIC_API_URL}/api/cart/payment-methods`);
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/cart/payment-methods`);
     
     if (!response.ok) {
         const errorText = await response.text();
@@ -26,7 +26,7 @@ export const fetchCart = async (): Promise<CartLine[]> => {
         token = localStorage.getItem(SECRET_KEY_NAME);
     }
 
-    const response = await fetch(`http://${process.env.NEXT_PUBLIC_API_URL}/api/cart`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/cart`, {
         headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${token}`
@@ -57,7 +57,7 @@ export const addToCart = async (productId: number, quantity: number): Promise<st
         quantity: quantity
     };
     
-    const response = await fetch(`http://${process.env.NEXT_PUBLIC_API_URL}/api/cart/add-item`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/cart/add-item`, {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
@@ -82,7 +82,7 @@ export const removeFromCart = async (itemId: number): Promise<string> => {
     }
 
     const response = await fetch(
-        `http://${process.env.NEXT_PUBLIC_API_URL}/api/cart/remove-item/${itemId}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/cart/remove-item/${itemId}`,
         {
             method: 'DELETE',
             headers: {

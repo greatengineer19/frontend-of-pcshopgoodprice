@@ -60,7 +60,7 @@ export default function ComponentComputerComponentsIndex() {
 				const formData = new FormData();
 				formData.append('file', file);
 	
-				const response = await fetch(`http://${process.env.NEXT_PUBLIC_API_URL}/api/upload_url`, {
+				const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/upload_url`, {
 					method: 'POST',
 					body: formData,
 				});
