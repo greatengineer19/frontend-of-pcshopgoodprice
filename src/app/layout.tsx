@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
 import { Navbar } from "@/components/layout/navbar"
+import { usePathname } from 'next/navigation'
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,6 +25,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const pathname = usePathname();
   return (
     <html lang="en">
       <head>
@@ -34,7 +36,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Navbar />
+        {pathname !== '/' && <Navbar />}
         <main>{children}</main>
         <Toaster richColors />
       </body>
