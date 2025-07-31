@@ -76,7 +76,17 @@ export function Navbar() {
     }
     
     if (pathname === '/') {
-        return null; // Don't render Navbar on the home page
+        return (
+            <div className="border-b">
+                <div className="container mx-auto flex h-16 items-center justify-start px-4">
+                    <Link href="/computer_components" className="flex items-center">
+                        <span className="text-xl font-normal" style={{ fontFamily: "'Tinos', serif", fontWeight: 400 }}>
+                            PCSHOP GOOD PRICE
+                        </span>
+                    </Link>
+                </div>
+            </div>
+        )
     }
 
     return (
