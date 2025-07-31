@@ -78,7 +78,7 @@ export function NewProductModal({
         setIsLoading(true);
       
         try {
-          if (!newProduct.name || !newProduct.component_category_name) {
+          if (!newProduct.name || !newProduct.component_category_name || !newProduct.product_code) {
             showErrorToast("Please fill in all required fields");
             return;
           }
@@ -181,6 +181,19 @@ export function NewProductModal({
                                     value={newProduct.name}
                                     disabled={isLoading}
                                     onChange={(e) => handleChange("name", e.target.value)}
+                                    required
+                                />
+                            </div>
+
+                            <div className="grid gap-2">
+                                <Label htmlFor="new-product-code" className="required">
+                                    Name
+                                </Label>
+                                <Input
+                                    id="new-product-code"
+                                    value={newProduct.product_code}
+                                    disabled={isLoading}
+                                    onChange={(e) => handleChange("product_code", e.target.value)}
                                     required
                                 />
                             </div>
