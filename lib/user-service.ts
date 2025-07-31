@@ -30,6 +30,8 @@ export const fetchUser = async (requestRole: string, token: string): Promise<Get
 export const fetchUserDefault = async (): Promise<GetUserResponseAPI> => {
     console.log("<<< hello!")
     console.log(process.env)
+    console.log("<<< val?!")
+    console.log(process.env.NEXT_PUBLIC_API_URL)
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/show-default`, {
         headers: {
             "Content-Type": "application/json"
