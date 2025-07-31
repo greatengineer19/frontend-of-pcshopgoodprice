@@ -19,6 +19,7 @@ import { CartLine } from "@/types/cart"
 import { GetUserResponseAPI, User, UserRole } from "@/types/user"
 import { useUser } from "@/hooks/use-user"
 import { redirect } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 
 export function Navbar() {
     const SECRET_KEY_NAME = 'secret_key';
@@ -28,6 +29,7 @@ export function Navbar() {
         user, role, setRole, setUser, isLoadingUser, cartChanged, setCartChanged
     } = useUser()
     const [cartItemCount, setCartItemCount] = useState(0)
+    const pathname = usePathname();
 
     // Load cart item count
     useEffect(() => {
@@ -73,6 +75,10 @@ export function Navbar() {
         }
     }
     
+    if (pathname === '/') {
+        return null; // Don't render Navbar on the home page
+    }
+
     return (
         isLoadingUser ? (
             <div className="border-b">
