@@ -24,7 +24,7 @@ export default function Home() {
       setUser(responseUser)
       setRole(userRole)
 
-      window.location.reload();
+      window.location.href = '/shop';
   }
 
   const loginAsSeller = async () => {
@@ -38,7 +38,7 @@ export default function Home() {
       setUser(responseUser)
       setRole(userRole)
 
-      window.location.reload();
+      window.location.href = '/computer_components';
   }
 
   return (
