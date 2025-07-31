@@ -125,6 +125,7 @@ export function NewProductModal({
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
+              "origin": "pcshopgoodprice.com"
             },
             body: JSON.stringify(payload),
           });

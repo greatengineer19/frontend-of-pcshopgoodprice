@@ -29,7 +29,8 @@ export const createSalesInvoice = async (
         body: JSON.stringify(salesInvoiceParam),
         headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
+            "Authorization": `Bearer ${token}`,
+            "origin": "pcshopgoodprice.com"
         }
     });
 
@@ -54,7 +55,8 @@ export const voidSalesInvoice = async (id: number): Promise<any> => {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
-                    "Authorization": `Bearer ${token}`
+                    "Authorization": `Bearer ${token}`,
+                    "origin": "pcshopgoodprice.com"
                 },
             });
             
@@ -80,7 +82,8 @@ export const fetchSalesInvoices = async (): Promise<SalesInvoice[]> => {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/sales-invoices`, {
         headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
+            "Authorization": `Bearer ${token}`,
+            "origin": "pcshopgoodprice.com"
         }
     });
 

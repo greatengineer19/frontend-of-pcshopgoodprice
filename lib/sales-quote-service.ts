@@ -43,7 +43,8 @@ export const createSalesQuote = async (
         body: JSON.stringify(salesQuoteParam),
         headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
+            "Authorization": `Bearer ${token}`,
+            "origin": "pcshopgoodprice.com"
         }
     });
 
@@ -68,7 +69,8 @@ export const destroySalesQuote = async (id: number): Promise<any> => {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
-                    "Authorization": `Bearer ${token}`
+                    "Authorization": `Bearer ${token}`,
+                    "origin": "pcshopgoodprice.com"
                 },
             });
             
@@ -94,7 +96,8 @@ export const fetchSalesQuotes = async (): Promise<SalesQuote[]> => {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/sales-quotes`, {
         headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
+            "Authorization": `Bearer ${token}`,
+            "origin": "pcshopgoodprice.com"
         }
     });
 

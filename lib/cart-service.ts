@@ -29,7 +29,8 @@ export const fetchCart = async (): Promise<CartLine[]> => {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/cart`, {
         headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
+            "Authorization": `Bearer ${token}`,
+            "origin": "pcshopgoodprice.com"
         }
     });
     
@@ -61,7 +62,8 @@ export const addToCart = async (productId: number, quantity: number): Promise<st
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
+            "Authorization": `Bearer ${token}`,
+            "origin": "pcshopgoodprice.com"
         },
         body: JSON.stringify(payload),
     });
@@ -87,7 +89,8 @@ export const removeFromCart = async (itemId: number): Promise<string> => {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
-                "Authorization": `Bearer ${token}`
+                "Authorization": `Bearer ${token}`,
+                "origin": "pcshopgoodprice.com"
             },
         });
         

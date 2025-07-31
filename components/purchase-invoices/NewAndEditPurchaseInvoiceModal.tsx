@@ -111,6 +111,7 @@ export function NewAndEditPurchaseInvoiceModal({
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
+                  "origin": "pcshopgoodprice.com"
                 },
                 body: JSON.stringify(payload),
               });
@@ -169,7 +170,8 @@ export function NewAndEditPurchaseInvoiceModal({
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/purchase-invoices/${id}`, {
                 method: 'PATCH',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    "origin": "pcshopgoodprice.com"
                 },
                 body: JSON.stringify(payload)
             });

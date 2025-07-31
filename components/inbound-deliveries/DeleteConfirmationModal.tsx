@@ -48,6 +48,7 @@ export function DeleteConfirmationModal({
                     method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json',
+                        "origin": "pcshopgoodprice.com"
                     },
                 });
 

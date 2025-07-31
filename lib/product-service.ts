@@ -28,7 +28,8 @@ export const fetchProducts = async (filters?: ProductFilter): Promise<{ result: 
     let response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/sellable-products${queryString}`, {
         headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
+            "Authorization": `Bearer ${token}`,
+            "origin": "pcshopgoodprice.com"
         }
     });
 
@@ -54,7 +55,8 @@ export const fetchProductBySlug = async (slug: string): Promise<ShopContentProdu
     let response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/sellable-products/${slug}`, {
         headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
+            "Authorization": `Bearer ${token}`,
+            "origin": "pcshopgoodprice.com"
         }
     });
 

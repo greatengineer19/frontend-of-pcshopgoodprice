@@ -32,6 +32,7 @@ export default function PurchaseIndex() {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
+                    "origin": "pcshopgoodprice.com"
                 }
             });
             
@@ -51,6 +52,7 @@ export default function PurchaseIndex() {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
+                    "origin": "pcshopgoodprice.com"
                 }
             });
             
@@ -75,6 +77,7 @@ export default function PurchaseIndex() {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
+                "origin": "pcshopgoodprice.com"
             }
         });
         

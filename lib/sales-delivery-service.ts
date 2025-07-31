@@ -20,7 +20,8 @@ export const voidSalesDelivery = async (id: number): Promise<any> => {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
-                    "Authorization": `Bearer ${token}`
+                    "Authorization": `Bearer ${token}`,
+                    "origin": "pcshopgoodprice.com"
                 },
             });
             
@@ -49,7 +50,8 @@ export const fullyDelivered = async (id: number): Promise<any> => {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
-                    "Authorization": `Bearer ${token}`
+                    "Authorization": `Bearer ${token}`,
+                    "origin": "pcshopgoodprice.com"
                 },
             });
             
@@ -75,7 +77,8 @@ export const fetchSalesDeliveries = async (): Promise<SalesDelivery[]> => {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/sales-deliveries`, {
         headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
+            "Authorization": `Bearer ${token}`,
+            "origin": "pcshopgoodprice.com"
         }
     });
 

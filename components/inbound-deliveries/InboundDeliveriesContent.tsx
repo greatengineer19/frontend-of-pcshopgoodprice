@@ -28,7 +28,8 @@ export default function InboundDeliveriesContent() {
                 {
                 method: 'GET',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    "origin": "pcshopgoodprice.com"
                 }
             });
 
@@ -50,6 +51,7 @@ export default function InboundDeliveriesContent() {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
+                "origin": "pcshopgoodprice.com"
             }
         });
         
