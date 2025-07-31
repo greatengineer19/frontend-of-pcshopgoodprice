@@ -1,81 +1,97 @@
 import Image from "next/image";
 import Link from "next/link";
+import { fetchUserSuperBuyer, fetchUserDefault } from "@/lib/user-service"
+import type { GetUserResponseAPI, UserRole } from "@/types/user"
+import { useUser } from "@/hooks/use-user"
+import { redirect } from 'next/navigation'
 
 export default function Home() {
+  const SECRET_KEY_NAME = 'secret_key';
+  const REFRESH_KEY_NAME = 'refresh_key';
+
+  const { setRole, setUser } = useUser()
+  
+  const loginAsBuyer = async () => {
+      const response: GetUserResponseAPI  = await fetchUserSuperBuyer();
+      const responseUser = response.user;
+
+      localStorage.setItem(SECRET_KEY_NAME, response.access_token);
+      localStorage.setItem(REFRESH_KEY_NAME, response.refresh_token);
+
+      const userRole: UserRole = responseUser.role.toLowerCase() as UserRole;
+      setUser(responseUser)
+      setRole(userRole)
+
+      redirect('/shop')
+  }
+
+  const loginAsSeller = async () => {
+      const response: GetUserResponseAPI  = await fetchUserDefault();
+      const responseUser = response.user;
+
+      localStorage.setItem(SECRET_KEY_NAME, response.access_token);
+      localStorage.setItem(REFRESH_KEY_NAME, response.refresh_token);
+
+      const userRole: UserRole = responseUser.role.toLowerCase() as UserRole;
+      setUser(responseUser)
+      setRole(userRole)
+
+      redirect('/computer_components')
+  }
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
+    <div className="relative min-h-screen w-full overflow-hidden">
+      {/* Desktop Background */}
+      <div className="absolute inset-0 hidden md:block">
         <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
+          src="/placeholder.svg?height=1080&width=1920"
+          alt="Desktop background"
+          fill
+          className="object-cover"
           priority
         />
-        <form className="flex flex-col items-center w-full">
-          <label htmlFor="product" className="text-left w-full">Type the product you want to purchase:</label>
-          <input type="text" id="product" className="w-full" style={{ padding: "5px",
-                                                   marginTop: "10px", backgroundColor: "lightgray", color: "black",
-                                                   marginBottom: "15px" }}/>
-          <button type="submit" className="rounded-full items-center justify-center bg-foreground flex transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] h-10 px-6 gap-2" style={{ color: "black" }}><Image
-              src="/search-alt-2-svgrepo-com.svg"
-              alt="Search logomark"
-              width={20}
-              height={20}
-            /> Search</button>
-        </form>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <Link href="/computer-components" className="text-blue-500">
-          Go to Computer Components
-        </Link>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        <div className="absolute inset-0 bg-black/40" />
+      </div>
+
+      {/* Mobile Background */}
+      <div className="absolute inset-0 block md:hidden">
+        <Image
+          src="/placeholder.svg?height=800&width=400"
+          alt="Mobile background"
+          fill
+          className="object-cover"
+          priority
+        />
+        <div className="absolute inset-0 bg-black/50" />
+      </div>
+
+      {/* Content */}
+      <div className="relative z-10 flex min-h-screen items-center justify-center px-4">
+        <div className="w-full max-w-md space-y-8 text-center">
+          {/* Logo/Title */}
+          <div className="space-y-4">
+            <h1 className="text-4xl font-bold text-white md:text-5xl lg:text-6xl">Welcome</h1>
+            <p className="text-lg text-white/90 md:text-xl">Choose your login type to get started</p>
+          </div>
+
+          {/* Login Buttons */}
+          <div className="space-y-4">
+            <button
+              onClick={loginAsBuyer}
+              className="block w-full rounded-lg bg-blue-600 px-8 py-4 text-lg font-semibold text-white shadow-lg transition-all duration-200 hover:bg-blue-700 hover:shadow-xl hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-500/50"
+            >
+              Login as Buyer
+            </button>
+
+            <button
+              onClick={loginAsSeller}
+              className="block w-full rounded-lg bg-blue-600 px-8 py-4 text-lg font-semibold text-white shadow-lg transition-all duration-200 hover:bg-blue-700 hover:shadow-xl hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-500/50"
+            >
+              Login as Seller
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
-  );
+  )
 }

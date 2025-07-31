@@ -48,3 +48,24 @@ export const fetchUserDefault = async (): Promise<GetUserResponseAPI> => {
         'access_token': responseData.access_token,
         'refresh_token': responseData.refresh_token }
 }
+
+export const fetchUserSuperBuyer = async (): Promise<GetUserResponseAPI> => {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/signin-as-superbuyer`, {
+        headers: {
+            "Content-Type": "application/json",
+            "origin": "pcshopgoodprice.com"
+        }
+    });
+
+    if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || "Failed to fetch user default");
+    }
+
+    const responseData: GetUserResponseAPI = await response.json();
+
+    return {
+        'user': responseData.user,
+        'access_token': responseData.access_token,
+        'refresh_token': responseData.refresh_token }
+}

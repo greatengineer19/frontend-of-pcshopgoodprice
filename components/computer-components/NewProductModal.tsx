@@ -187,7 +187,7 @@ export function NewProductModal({
 
                             <div className="grid gap-2">
                                 <Label htmlFor="new-product-code" className="required">
-                                    Name
+                                    Product Code
                                 </Label>
                                 <Input
                                     id="new-product-code"
