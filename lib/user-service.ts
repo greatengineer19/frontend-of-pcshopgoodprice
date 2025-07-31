@@ -34,7 +34,8 @@ export const fetchUserDefault = async (): Promise<GetUserResponseAPI> => {
     console.log(process.env.NEXT_PUBLIC_API_URL)
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/show-default`, {
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "origin": "pcshopgoodprice.com"
         }
     });
 
