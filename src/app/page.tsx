@@ -46,7 +46,7 @@ export default function Home() {
       {/* Desktop Background */}
       <div className="absolute inset-0 hidden md:block">
         <Image
-          src="/placeholder.svg?height=1080&width=1920"
+          src="/seacliffbridge.jpeg?height=1080&width=1920"
           alt="Desktop background"
           fill
           className="object-cover"
@@ -58,7 +58,7 @@ export default function Home() {
       {/* Mobile Background */}
       <div className="absolute inset-0 block md:hidden">
         <Image
-          src="/placeholder.svg?height=800&width=400"
+          src="/seacliffbridge.jpeg?height=800&width=400"
           alt="Mobile background"
           fill
           className="object-cover"
@@ -73,7 +73,7 @@ export default function Home() {
           {/* Logo/Title */}
           <div className="space-y-4">
             <h1 className="text-4xl font-bold text-white md:text-5xl lg:text-6xl">Welcome</h1>
-            <p className="text-lg text-white/90 md:text-xl">Choose your login type to get started</p>
+            <p className="text-lg text-white/90 md:text-xl">Choose your login type</p>
           </div>
 
           {/* Login Buttons */}
