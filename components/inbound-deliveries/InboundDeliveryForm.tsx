@@ -21,6 +21,7 @@ import { useInboundDeliveryForm } from "@/hooks/use-inbound-delivery-form"
 import { handleApiError } from "@/utils/api/error-handlers"
 import { useToastSuccess } from "@/hooks/use-toast-success"
 import { useToastError } from "@/hooks/use-toast-error"
+import { useUser } from "@/hooks/use-user"
 
 interface ParamsProps {
     isLoading: boolean
@@ -37,6 +38,7 @@ export function InboundDeliveryForm({
 
     const { showSuccessToast } = useToastSuccess()
     const { showErrorToast } = useToastError()
+    const { user } = useUser()
 
     const {
         formData,
@@ -101,7 +103,7 @@ export function InboundDeliveryForm({
                 
                 payload.inbound_delivery_attachments_attributes = uploadData.image_list.map((uploaded_image: UploadedImageResponse) => ({
                     file_s3_key: uploaded_image.s3_key,
-                    uploaded_by: formData.received_by,
+                    uploaded_by: user ? user.fullname : formData.received_by,
                     _destroy: false
                 }));
             }
@@ -381,7 +383,7 @@ export function InboundDeliveryForm({
                         formData.inbound_delivery_lines_attributes.some((deliveryLine) => deliveryLine.received_quantity + deliveryLine.damaged_quantity > deliveryLine.expected_quantity)
                     }
                 >
-                    {newIsLoading ? "Processing..." : "Create Inbound"}
+                    {newIsLoading ? "Processing..." : "Create Inbound Delivery"}
                 </Button>
             </div>
         </form>

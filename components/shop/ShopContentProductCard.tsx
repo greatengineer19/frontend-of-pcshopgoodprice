@@ -91,7 +91,8 @@ export function ShopContentProductCard({ product }: ProductCardProps) {
                                 />
                             ))}
                         </div>
-                        <span className="text-xs text-gray-500 ml-1">({product.count_review_given})</span>
+                        <span className="text-xs font-bold text-gray-500 ml-1">{product.rating} </span>
+                        <span className="text-xs text-gray-500 ml-1">({product.count_review_given} Reviews)</span>
                     </div>
 
                     {/* Price */}

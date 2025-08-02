@@ -10,9 +10,11 @@ import { PurchaseViewModal } from "./PurchaseViewModal"
 import { DeleteConfirmationModal } from "./delete-confirmation-modal"
 import { NewAndEditPurchaseInvoiceModal } from "./NewAndEditPurchaseInvoiceModal"
 import { useToastError } from "@/hooks/use-toast-error"
+import { usePurchaseInvoiceForm } from "@/hooks/use-purchase-invoice-form"
 
 export default function PurchaseIndex() {
     const [isPurchaseModalOpen, setIsPurchaseInvoiceModalOpen] = useState(false)
+    const [isNewRequest, setIsNewRequest] = useState(false)
     const [isViewModalOpen, setIsViewModalOpen] = useState(false)
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
     const [selectedInvoice, setSelectedPurchaseInvoice] = useState<PurchaseInvoice | null>(null)
@@ -20,7 +22,11 @@ export default function PurchaseIndex() {
     const [isLoading, setIsLoading] = useState(false)
     const { showErrorToast } = useToastError()
 
+    const { resetForm } = usePurchaseInvoiceForm(undefined)
+
     const handleNewPurchaseModal = useCallback(() => {
+        resetForm()
+        setIsNewRequest(true)
         setSelectedPurchaseInvoice(null)
         setIsEditMode(false)
         setIsPurchaseInvoiceModalOpen(true)
@@ -114,6 +120,7 @@ export default function PurchaseIndex() {
 
             <NewAndEditPurchaseInvoiceModal 
                 isNewModalOpen={isPurchaseModalOpen}
+                isNewRequest={isNewRequest}
                 isLoading={isLoading}
                 isEditMode={isEditMode}
                 initialInvoice={selectedInvoice}

@@ -131,19 +131,25 @@ export function PurchaseInvoiceList({
                                                             <Eye className="mr-2 h-4 w-4" />
                                                             View Details   
                                                         </DropdownMenuItem>
-                                                        <DropdownMenuItem
-                                                            onClick={() => onEditModal(invoice)}
-                                                        >
-                                                            <Edit className="mr-2 h-4 w-4"/>
-                                                            Edit
-                                                        </DropdownMenuItem>
-                                                        <DropdownMenuItem
-                                                            onClick={() => onDeleteInvoice(invoice)}
-                                                            className="text-destructive focus:text-destructive"
-                                                        >
-                                                            <Trash2 className="mr-2 h-4 w-4" />
-                                                            Delete
-                                                        </DropdownMenuItem>
+                                                        {invoice.status === "pending" && (
+                                                            <DropdownMenuItem
+                                                                onClick={() => onEditModal(invoice)}
+                                                            >
+                                                                <Edit className="mr-2 h-4 w-4"/>
+                                                                Edit
+                                                            </DropdownMenuItem>
+                                                        )}
+                                                        {
+                                                            invoice.status === "pending" && (
+                                                                <DropdownMenuItem
+                                                                    onClick={() => onDeleteInvoice(invoice)}
+                                                                    className="text-destructive focus:text-destructive"
+                                                                >
+                                                                    <Trash2 className="mr-2 h-4 w-4" />
+                                                                    Delete
+                                                                </DropdownMenuItem>
+                                                            )
+                                                        }
                                                     </DropdownMenuContent>
                                                 </DropdownMenu>
                                             </div>

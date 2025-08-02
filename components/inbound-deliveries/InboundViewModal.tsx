@@ -93,7 +93,7 @@ export function InboundViewModal({ inboundDelivery, isOpen, onClose }: ParamsPro
                                     <Badge className="bg-green-500 text-white">{inboundDelivery.status.toLocaleUpperCase()}</Badge>
                                 </div>
                                 <div>
-                                    <h4 className="text-sm font-medium textt-muted-foreground mb-1">Inbound Date</h4>
+                                    <h4 className="text-sm font-medium textt-muted-foreground mb-1">Inbound Delivery Date</h4>
                                     <p className="flex items-center">
                                         <Calendar className="h-4 w-4 mr-2 text-muted-foreground" />
                                         {new Date(inboundDelivery.inbound_delivery_date).toLocaleDateString("en-GB", {
@@ -115,7 +115,7 @@ export function InboundViewModal({ inboundDelivery, isOpen, onClose }: ParamsPro
                                     </p>
                                 </div>
                                 <div>
-                                    <h4 className="text-sm font-medium text-muted-foreground mb-1">Created</h4>
+                                    <h4 className="text-sm font-medium text-muted-foreground mb-1">Created at</h4>
                                     <p>{formattedCreatedAt}</p>
                                 </div>
 

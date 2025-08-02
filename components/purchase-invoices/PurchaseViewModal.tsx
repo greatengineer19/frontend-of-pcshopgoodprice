@@ -131,16 +131,20 @@ export function PurchaseViewModal({ invoice, isViewModalOpen, closeViewModal, on
                     <Button type="button" variant="outline" onClick={closeViewModal}>
                         Close
                     </Button>
-                    <Button
-                        type="button"
-                        onClick={() => {
-                            closeViewModal()
-                            onEditModal(invoice)
-                        }}
-                    >
-                        <Edit className="h-4 w-4 mr-2" />
-                        Edit
-                    </Button>
+                    {
+                        invoice.status.toLowerCase() === "pending" && (
+                            <Button
+                                type="button"
+                                onClick={() => {
+                                    closeViewModal()
+                                    onEditModal(invoice)
+                                }}
+                            >
+                                <Edit className="h-4 w-4 mr-2" />
+                                Edit
+                            </Button>
+                        )
+                    }
                 </DialogFooter>
             </DialogContent>
         </Dialog>

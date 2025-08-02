@@ -289,11 +289,23 @@ export function NewProductModal({
                                             id="default-price"
                                             type="number"
                                             placeholder="0.00"
-                                            value={defaultPrice}
-                                            onChange={(e) => setDefaultPrice(e.target.value)}
+                                            value={
+                                                defaultPrice === "0" || defaultPrice === "" 
+                                                    ? "" 
+                                                    : Number(defaultPrice) % 1 === 0 
+                                                        ? parseInt(defaultPrice) 
+                                                        : parseFloat(defaultPrice).toFixed(2)
+                                            }
+                                            onChange={(e) => {
+                                                const value = e.target.value;
+                                                if (value === "" || /^\d*\.?\d*$/.test(value)) {
+                                                    setDefaultPrice(value);
+                                                }
+                                            }}
                                             className="mt-1"
-                                            step="0.01"
+                                            step="0.1"
                                             min="0"
+                                            required
                                         />
                                     </div>
                                     <div className="flex items-center space-x-2 ml-4">
@@ -316,10 +328,21 @@ export function NewProductModal({
                                                         <Input 
                                                             type="number"
                                                             placeholder="0.00"
-                                                            value={day.pricePerUnit}
-                                                            onChange={(e) => handlePriceChange(index, e.target.value)}
+                                                            value={
+                                                                Number(day.pricePerUnit) === 0
+                                                                    ? "" 
+                                                                    : Number(day.pricePerUnit) % 1 === 0 
+                                                                        ? Number(day.pricePerUnit).toFixed(0)
+                                                                        : Number(day.pricePerUnit).toFixed(2)
+                                                            }
+                                                            onChange={(e) => {
+                                                                const value = e.target.value;
+                                                                if (value === "" || /^\d*\.?\d*$/.test(value)) {
+                                                                    handlePriceChange(index, value);
+                                                                }
+                                                            }}
                                                             className="mt-1"
-                                                            step="1"
+                                                            step="0.1"
                                                             min="0"
                                                         />
                                                     </div>

@@ -88,7 +88,7 @@ export default function ProductDetailContent() {
 
         setIsAddingToCart(true)
         try {
-            await addToCart(product.id, 1)
+            await addToCart(product.id, quantity)
             router.push("/cart")
         } catch (error) {
             toast.error("Failed to process your order")
@@ -200,7 +200,7 @@ export default function ProductDetailContent() {
                             <span className="text-sm font-medium mr-4">Availability:</span>
                             {
                                 1 == 1 ? (
-                                    <span className="text-green-600">In stock (10 available)</span>
+                                    <span className="text-green-600">In stock</span>
                                 ) : (
                                     <span className="text-red-600">Out of stock</span>
                                 )
@@ -271,7 +271,7 @@ export default function ProductDetailContent() {
                         product.description && product.description.length > 10 ? (
                             <p className="text-muted-foreground">{product.description}</p>
                         ) : (
-                            <p className="text-muted-foreground">No specifications available yet for this product.</p>
+                            <p className="text-muted-foreground">Available soon</p>
                         )
                     }
                 </TabsContent>

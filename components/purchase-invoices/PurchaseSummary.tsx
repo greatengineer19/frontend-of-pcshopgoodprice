@@ -14,6 +14,8 @@ interface ParamsProps {
     selectedInvoiceLines: OnEditPurchaseInvoiceLine[]
     supplierName: string
     setSupplierName: (value: string) => void
+    invoiceDate: string
+    setInvoiceDate: (value: string) => void
     expectedDeliveryDate: string
     setExpectedDeliveryDate: (value: string) => void
     procurementNote: string
@@ -27,6 +29,8 @@ export function PurchaseSummary({
     selectedInvoiceLines,
     supplierName,
     setSupplierName,
+    invoiceDate,
+    setInvoiceDate,
     expectedDeliveryDate,
     setExpectedDeliveryDate,
     procurementNote,
@@ -51,6 +55,15 @@ export function PurchaseSummary({
                             value={supplierName}
                             onChange={(e) => setSupplierName(e.target.value)}
                             required
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="delivery-date">Invoice date</Label>
+                        <Input
+                            id="invoice-date"
+                            type="date"
+                            value={invoiceDate}
+                            onChange={(e) => setInvoiceDate(e.target.value)}
                         />
                     </div>
                     <div className="space-y-2">

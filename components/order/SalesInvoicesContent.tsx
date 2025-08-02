@@ -146,7 +146,7 @@ export default function SalesInvoicesContent(
                                                                     <div className="flex-1 min-w-0">
                                                                         <h4 className="font-medium text-sm line-clamp-1">{item.component_name}</h4>
                                                                         <p className="text-sm text-muted-foreground">
-                                                                            Rp {Number(item.price_per_unit).toLocaleString()} x {item.quantity}
+                                                                            Rp {Number(item.price_per_unit).toLocaleString()} x {Number(item.quantity)}
                                                                         </p>
                                                                         <p className="font-medium mt-1">Rp {Number(item.total_line_amount).toLocaleString()}</p>
                                                                     </div>

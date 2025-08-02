@@ -141,7 +141,7 @@ export function ProductFilters({
                                 value={[selectedPriceRange[0], selectedPriceRange[1]]}
                                 min={defaultMinPrice}
                                 max={defaultMaxPrice}
-                                step={1}
+                                step={1000}
                                 onValueChange={handlePriceRangeChange}
                                 className="my-6"
                             />
@@ -158,6 +158,7 @@ export function ProductFilters({
                                         handlePriceInputChange(e.target.value, priceInputMax)
                                     }}
                                     className="h-8"
+                                    step={1000}
                                     min={defaultMinPrice}
                                     max={defaultMaxPrice}
                                 />
@@ -175,6 +176,7 @@ export function ProductFilters({
                                         handlePriceInputChange(priceInputMin, e.target.value)
                                     }}
                                     className="h-8"
+                                    step={1000}
                                     min={defaultMinPrice}
                                     max={defaultMaxPrice}
                                 />

@@ -53,6 +53,7 @@ export interface MappedProduct {
 export interface PurchaseForm {
     supplierName: string
     expectedDeliveryDate: string | null
+    invoiceDate: string
     notes: string | null
     selectedInvoiceLines: OnEditPurchaseInvoiceLine[]
 }

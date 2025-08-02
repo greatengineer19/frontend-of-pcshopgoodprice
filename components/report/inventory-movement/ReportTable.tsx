@@ -70,7 +70,7 @@ export function ReportTable({ reportData, isLoading, currentPage, onPageChange }
                                                         }) :
                                                         (
                                                             cell.cell_type == "quantity" ?
-                                                            Number(cell.text).toFixed(2) :
+                                                            Number(cell.text).toFixed(0) :
                                                             cell.text
                                                         )
                                                     )

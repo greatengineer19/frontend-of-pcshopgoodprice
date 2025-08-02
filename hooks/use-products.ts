@@ -12,8 +12,6 @@ export function useProducts() {
     useEffect(() => {
 		const fetchProducts = async () => {
 			try {
-				console.log("Hahahaha")
-				console.log(process.env)
 				const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/computer-components`);
 				
 				if (!response.ok) {

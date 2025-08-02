@@ -9,6 +9,7 @@ import type { ProductInFrontend } from "@/types/product"
 interface InitialDataProps {
     supplierName: string
     expectedDeliveryDate: string | null
+    invoiceDate: string | null
     notes: string | null
     purchase_invoice_lines: PurchaseInvoiceLine[]
 }
@@ -17,6 +18,7 @@ export function usePurchaseInvoiceForm(initialData?: InitialDataProps) {
     const [selectedInvoiceLines, setSelectedInvoiceLines] = useState<OnEditPurchaseInvoiceLine[]>([]);
     const [destroyableInvoiceLines, setDestroyableInvoiceLines] = useState<OnEditPurchaseInvoiceLine[]>([]);
     const [supplierName, setSupplierName] = useState("");
+    const [invoiceDate, setInvoiceDate] = useState("");
     const [expectedDeliveryDate, setExpectedDeliveryDate] = useState("");
     const [procurementNote, setProcurementNote] = useState("");
     const { showSuccessToast } = useToastSuccess();
@@ -27,7 +29,11 @@ export function usePurchaseInvoiceForm(initialData?: InitialDataProps) {
             const formattedDate = initialData.expectedDeliveryDate
                 ? new Date(initialData.expectedDeliveryDate).toISOString().split("T")[0]
                 : "";
+            const invoiceDateFormatted = initialData.invoiceDate
+                ? new Date(initialData.invoiceDate).toISOString().split("T")[0]
+                : "";
             setExpectedDeliveryDate(formattedDate);
+            setInvoiceDate(invoiceDateFormatted);
             setProcurementNote(initialData.notes || "");
 
             const mappedInvoiceLines: OnEditPurchaseInvoiceLine[] = initialData.purchase_invoice_lines?.map(invoice_line => ({
@@ -42,8 +48,15 @@ export function usePurchaseInvoiceForm(initialData?: InitialDataProps) {
             })) || [];
 
             setSelectedInvoiceLines(mappedInvoiceLines);
+        } else {
+            // Explicitly reset form fields when initialData is not provided (e.g., for a new form)
+            setSelectedInvoiceLines([]);
+            setSupplierName("");
+            setInvoiceDate("");
+            setExpectedDeliveryDate("");
+            setProcurementNote("");
         }
-    }, [initialData?.supplierName]); 
+    }, [initialData?.supplierName]);
 
     const addProductToProcurement = (product: MappedProduct) => {
         const existingProduct = selectedInvoiceLines.find((invoice_line) => invoice_line.component_id === product.id)
@@ -104,7 +117,8 @@ export function usePurchaseInvoiceForm(initialData?: InitialDataProps) {
 
     const resetForm = () => {
         setSelectedInvoiceLines([])
-        setSupplierName("")
+        setSupplierName("a")
+        setInvoiceDate("")
         setExpectedDeliveryDate("")
         setProcurementNote("")
     };
@@ -113,6 +127,7 @@ export function usePurchaseInvoiceForm(initialData?: InitialDataProps) {
         return {
             supplierName,
             expectedDeliveryDate,
+            invoiceDate,
             notes: procurementNote,
             selectedInvoiceLines: selectedInvoiceLines
         }
@@ -137,6 +152,8 @@ export function usePurchaseInvoiceForm(initialData?: InitialDataProps) {
         destroyableInvoiceLines,
         supplierName,
         setSupplierName,
+        invoiceDate,
+        setInvoiceDate,
         expectedDeliveryDate,
         setExpectedDeliveryDate,
         procurementNote,

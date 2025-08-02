@@ -28,6 +28,7 @@ import { handleApiError } from "@/utils/api/error-handlers"
 
 interface ParamsProps {
     isNewModalOpen: boolean
+    isNewRequest: boolean
     isLoading: boolean
     isEditMode: boolean
     initialInvoice: PurchaseInvoice | null
@@ -37,6 +38,7 @@ interface ParamsProps {
 
 export function NewAndEditPurchaseInvoiceModal({
     isNewModalOpen,
+    isNewRequest,
     isLoading,
     isEditMode,
     initialInvoice,
@@ -59,6 +61,7 @@ export function NewAndEditPurchaseInvoiceModal({
     const initialData = isEditMode && initialInvoice ? {
         supplierName: initialInvoice.supplier_name,
         expectedDeliveryDate: initialInvoice.expected_delivery_date,
+        invoiceDate: initialInvoice.invoice_date,
         notes: initialInvoice.notes,
         purchase_invoice_lines: initialInvoice.purchase_invoice_lines
     } : undefined
@@ -68,6 +71,8 @@ export function NewAndEditPurchaseInvoiceModal({
         destroyableInvoiceLines,
         supplierName,
         setSupplierName,
+        invoiceDate,
+        setInvoiceDate,
         expectedDeliveryDate,
         setExpectedDeliveryDate,
         procurementNote,
@@ -93,7 +98,7 @@ export function NewAndEditPurchaseInvoiceModal({
                 supplier_name: purchaseForm.supplierName,
                 expected_delivery_date: purchaseForm.expectedDeliveryDate,
                 notes: purchaseForm.notes,
-                invoice_date: (new Date()).toISOString(),
+                invoice_date: purchaseForm.invoiceDate,
                 purchase_invoice_lines_attributes: purchaseForm.selectedInvoiceLines.map(
                     (invoiceLine) => ({
                         id: null,
@@ -125,6 +130,7 @@ export function NewAndEditPurchaseInvoiceModal({
             showSuccessToast(data.message || "Purchase Invoice created successfully!")
 
             resetForm()
+            
             closeModal
             window.location.reload();
         } catch (error) {
@@ -142,8 +148,8 @@ export function NewAndEditPurchaseInvoiceModal({
                 id: id,
                 supplier_name: purchaseForm.supplierName,
                 expected_delivery_date: purchaseForm.expectedDeliveryDate,
+                invoice_date: purchaseForm.invoiceDate,
                 notes: purchaseForm.notes,
-                invoice_date: (new Date()).toISOString(),
                 purchase_invoice_lines_attributes: [
                 ...purchaseForm.selectedInvoiceLines.map((invoiceLine) => ({
                     id: invoiceLine.id,
@@ -206,7 +212,6 @@ export function NewAndEditPurchaseInvoiceModal({
         }
     };
 
-
     return (
         <Dialog open={isNewModalOpen} onOpenChange={closeModal}>
             <DialogContent className="max-w-[95vw] w-[1400px]">
@@ -235,6 +240,8 @@ export function NewAndEditPurchaseInvoiceModal({
                             selectedInvoiceLines={selectedInvoiceLines}
                             supplierName={supplierName}
                             setSupplierName={setSupplierName}
+                            invoiceDate={invoiceDate}
+                            setInvoiceDate={setInvoiceDate}
                             expectedDeliveryDate={expectedDeliveryDate}
                             setExpectedDeliveryDate={setExpectedDeliveryDate}
                             procurementNote={procurementNote}

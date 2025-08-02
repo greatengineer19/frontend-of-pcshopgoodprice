@@ -64,7 +64,6 @@ export function ProductViewModal(
     const { showSuccessToast } = useToastSuccess()
     const { showErrorToast } = useToastError()
 
-    const [sellPricesAttributes, setSellPricesAttributes] = useState<DailyProductPrice[]>([]);
     const { onEditProduct, handleEditProductChange, handleEditProductChangeInt, defaultPrice, setDefaultPrice } = useOnEditProduct()
     const { resetForm } = useProductForm(product || undefined)
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -79,9 +78,9 @@ export function ProductViewModal(
     );
 
     const handlePriceChange = (index: number, price: string) => {
-        const updated = [...dayPricing]
-        updated[index].price_per_unit = parseInt(price)
-        setDayPricing(updated)
+        const updated = [...dayPricing];
+        updated[index].price_per_unit = Number(price);
+        setDayPricing(updated);
     }
 
     const handleActiveToggle = (index: number, active: boolean) => {
@@ -124,33 +123,27 @@ export function ProductViewModal(
                 throw new Error('Failed to fetch category');
             }
 
-            let tempSellPrices: DailyProductPrice[] = [];
+            const newDefaultPrice = Number(defaultPrice);
 
-            const defaultPriceSetting = onEditProduct.computer_component_sell_price_settings_attributes.find(sell_price => sell_price.day_type === 'default')
-            if (defaultPriceSetting) {
-                const defaultPriceSettingParams = {
-                    id: defaultPriceSetting?.id,
-                    day_type: defaultPriceSetting?.day_type,
-                    price_per_unit: Number(defaultPrice),
-                    active: true
-                };
-                tempSellPrices.push(defaultPriceSettingParams);
-            }
-            
+            let tempSellPrices: DailyProductPrice[] = onEditProduct.computer_component_sell_price_settings_attributes.map(priceSetting => {
+                const foundDayPricing = dayPricing.find(sellPrice => sellPrice.day_type === priceSetting.day_type);
 
-            // 2. Create the daily price settings
-            const dailyPriceSettingsParams = onEditProduct.computer_component_sell_price_settings_attributes
-                .map(priceSetting => {
-                    const foundDayPricing = dayPricing.find(sellPrice => sellPrice.day_type === priceSetting.day_type)
+                if (priceSetting.day_type === 'default') {
                     return {
-                        id: priceSetting.id, // Include ID if exists for update
-                        day_type: priceSetting.day_type.toLowerCase(),
-                        price_per_unit: Number(foundDayPricing?.price_per_unit || priceSetting.price_per_unit),
-                        active: foundDayPricing?.active || priceSetting.active
-                    };
-                });
-            tempSellPrices.push(...dailyPriceSettingsParams);
-            setSellPricesAttributes(tempSellPrices);
+                        id: priceSetting.id,
+                        day_type: 'default',
+                        price_per_unit: newDefaultPrice,
+                        active: true
+                    }
+                }
+
+                return {
+                    id: priceSetting.id,
+                    day_type: priceSetting.day_type.toLowerCase(),
+                    price_per_unit: Number(foundDayPricing?.price_per_unit || priceSetting.price_per_unit),
+                    active: foundDayPricing?.active ?? priceSetting.active, // Use nullish coalescing for clarity.
+                };
+            })
 
             const payload: ProductParams = {
                 ...onEditProduct,
@@ -363,10 +356,21 @@ export function ProductViewModal(
                                                         id="default-price"
                                                         type="number"
                                                         placeholder="0.00"
-                                                        value={defaultPrice === "0" ? "" : parseFloat(defaultPrice).toFixed(0)}
-                                                        onChange={(e) => setDefaultPrice(e.target.value)}
+                                                        value={
+                                                            defaultPrice === "0" || defaultPrice === "" 
+                                                                ? "" 
+                                                                : Number(defaultPrice) % 1 === 0 
+                                                                    ? parseInt(defaultPrice) 
+                                                                    : parseFloat(defaultPrice).toFixed(2)
+                                                        }
+                                                        onChange={(e) => {
+                                                            const value = e.target.value;
+                                                            if (value === "" || /^\d*\.?\d*$/.test(value)) {
+                                                                setDefaultPrice(value);
+                                                            }
+                                                        }}
                                                         className="mt-1"
-                                                        step="0.01"
+                                                        step="0.1"
                                                         min="0"
                                                         required
                                                         disabled={!isEditMode || isLoading}
@@ -385,10 +389,21 @@ export function ProductViewModal(
                                                                     <Input
                                                                         type="number"
                                                                         placeholder="0.00"
-                                                                        value={priceSetting.price_per_unit === 0 ? "" : Number(priceSetting.price_per_unit).toFixed(0)}
-                                                                        onChange={(e) => handlePriceChange(index, e.target.value)}
+                                                                        value={
+                                                                            Number(priceSetting.price_per_unit) === 0
+                                                                                ? "" 
+                                                                                : Number(priceSetting.price_per_unit) % 1 === 0 
+                                                                                    ? Number(priceSetting.price_per_unit).toFixed(0)
+                                                                                    : Number(priceSetting.price_per_unit).toFixed(2)
+                                                                        }
+                                                                        onChange={(e) => {
+                                                                            const value = e.target.value;
+                                                                            if (value === "" || /^\d*\.?\d*$/.test(value)) {
+                                                                                handlePriceChange(index, value);
+                                                                            }
+                                                                        }}
                                                                         className="mt-1"
-                                                                        step="0.01"
+                                                                        step="0.1"
                                                                         min="0"
                                                                         disabled={!isEditMode || isLoading}
                                                                     />

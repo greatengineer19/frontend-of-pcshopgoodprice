@@ -90,6 +90,16 @@ export default function OrdersContent() {
                     </div>
                 ) : (
                     <div className="space-y-6">
+                        <SalesQuotesContent 
+                            salesQuotes={salesQuotes}
+                            expandedOrderId={expandedOrderId}
+                            expandedResourceType={expandedResourceType}
+                            handleToggleExpand={handleToggleExpand}
+                            isAccepting={isAccepting}
+                            setIsAccepting={setIsAccepting}
+                            isCancelling={isCancelling}
+                            setIsCancelling={setIsCancelling}
+                        />
                         <SalesDeliveriesContent 
                             salesDeliveries={salesDeliveries}
                             expandedOrderId={expandedOrderId}
@@ -105,16 +115,6 @@ export default function OrdersContent() {
                             expandedOrderId={expandedOrderId}
                             expandedResourceType={expandedResourceType}
                             handleToggleExpand={handleToggleExpand}
-                        />
-                        <SalesQuotesContent 
-                            salesQuotes={salesQuotes}
-                            expandedOrderId={expandedOrderId}
-                            expandedResourceType={expandedResourceType}
-                            handleToggleExpand={handleToggleExpand}
-                            isAccepting={isAccepting}
-                            setIsAccepting={setIsAccepting}
-                            isCancelling={isCancelling}
-                            setIsCancelling={setIsCancelling}
                         />
                     </div>
                 )

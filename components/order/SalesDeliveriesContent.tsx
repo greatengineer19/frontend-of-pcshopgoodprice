@@ -217,7 +217,7 @@ export default function SalesDeliveriesContent(
                                                                 </div>
                                                                 <div>
                                                                     <div className="flex-1 min-w-0">
-                                                                        <h4 className="font-medium text-sm line-clamp-1">{item.component_name}</h4>
+                                                                        <h4 className="font-medium text-sm line-clamp-1">{Number(item.quantity)} x {item.component_name}</h4>
                                                                     </div>
                                                                 </div>
                                                             </div>
