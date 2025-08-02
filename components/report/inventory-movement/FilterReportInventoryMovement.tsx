@@ -59,7 +59,7 @@ export function FilterReportInventoryMovement({ filters, onFilterChange, onApply
                     <div className="relative flex-1">
                         <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
                         <Input 
-                            placeholder="e.g InboundDelivery, SalesDelivery"
+                            placeholder="Component name... e.g: MSI"
                             className="pl-8"
                             value={filters.keyword}
                             onChange={(e) => onFilterChange({ keyword: e.target.value })}

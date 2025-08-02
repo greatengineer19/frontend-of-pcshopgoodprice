@@ -49,7 +49,7 @@ export function InboundViewModal({ inboundDelivery, isOpen, onClose }: ParamsPro
     }
 
     // Original date object with 7 hours added
-    const originalDate = new Date(new Date(inboundDelivery.created_at).getTime() + (7 * 60 * 60 * 1000));
+    const originalDate = new Date(new Date(inboundDelivery.created_at).getTime());
 
     // Manually format the date
     const day = originalDate.getDate();
@@ -216,7 +216,7 @@ export function InboundViewModal({ inboundDelivery, isOpen, onClose }: ParamsPro
                                                                 <p className="font-medium">Image {index + 1}</p>
                                                                 <p className="text-sx text-muted-foreground">
                                                                     Uploaded by {attachment.uploaded_by} on {" "}
-                                                                    {new Date(new Date(attachment.created_at).getTime() + (7 * 60 * 60 * 1000)).toLocaleString()}
+                                                                    {new Date(new Date(attachment.created_at).getTime()).toLocaleString()}
                                                                 </p>
                                                             </div>
                                                         </div>
