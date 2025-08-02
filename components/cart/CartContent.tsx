@@ -114,8 +114,11 @@ export default function CartPage() {
             toast.success("Sales Quote placed successfully!")
             router.push("/orders")
         } catch (error) {
+            const data = JSON.parse((error as Error).message);
+            const message = data.detail;
+
             console.error("Failed to process order:", error)
-            toast.error("Failed to process your order")
+            toast.error(message)
         } finally {
             setIsProcessing(false)
         }

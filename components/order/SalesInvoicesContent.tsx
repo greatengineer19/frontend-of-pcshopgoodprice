@@ -49,6 +49,7 @@ export default function SalesInvoicesContent(
                             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                                 <div>
                                     <CardTitle className="text-lg">Sales Invoice #{salesInvoice.sales_invoice_no}</CardTitle>
+                                    <CardDescription>Quotation no. #{salesInvoice.sales_quote_no}</CardDescription>
                                     <CardDescription>Placed on {new Date(salesInvoice.created_at).toLocaleDateString("en-GB", {
                                         day: "numeric",
                                         month: "short", // "Jul" format

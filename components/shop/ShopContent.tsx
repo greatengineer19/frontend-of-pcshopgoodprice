@@ -7,6 +7,7 @@ import { ProductFilters } from "@/components/shop/ProductFilters"
 import { Loader2 } from "lucide-react"
 import { ShopContentListWrapper, ShopContentDictionary, ProductBrand } from "@/types/product"
 import type { ProductCategory } from "@/types/computer-component-category"
+import { useUser } from "@/hooks/use-user"
 
 export default function ShopContent() {
     const [totalItem, setTotalItem] = useState(0)
@@ -25,6 +26,7 @@ export default function ShopContent() {
     const [isLoading, setIsLoading] = useState(true)
     const [minRating, setMinRating] = useState(0)
     const item_per_page = 25
+    const { user } = useUser()
 
     function transformResponseProducts(products: ShopContentListWrapper) {
         setTotalItem(products.total_item)
@@ -79,7 +81,7 @@ export default function ShopContent() {
 
     return (
         <div className="container mx-auto px-4 py-8">
-            <h1 className="text-3xl font-bold mb-8">Hi shoppers, shop with us today.</h1>
+            <h1 className="text-3xl font-bold mb-8">Hi {user ? user.fullname : 'Shoppers'}, shop with us today.</h1>
             <div className="flex flex-col md:flex-row gap-8">
                 <div className="w-full md:w-1/4 lg:w-1/5">
                     <ProductFilters 
