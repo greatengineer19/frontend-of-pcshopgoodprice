@@ -162,8 +162,8 @@ Seller can also adjust the data shown by using filter
 4. Aside of working and this side project, I am also interested in playing Fantasian and Dota2, and going out with friends and families. This meant I sometimes had to rotate my activities to stay motivated and avoid burnout.
 ### Learning and Development
 From April to May 2025, I improved my frontend knowledges by learning in Codecademy:
-    - Learn React: Introduction Course
-    - Learn JavaScript​: Asynchronous Programming by Codecademy
+- Learn React: Introduction Course
+- Learn JavaScript​: Asynchronous Programming by Codecademy
 
 ### Project Milestones
 **April - May 2025**: I spent 2 months to complete the "Seller Side" features.
