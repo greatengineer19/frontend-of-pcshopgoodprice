@@ -67,6 +67,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-black/50" />
       </div>
 
+
       {/* Content */}
       <div className="relative z-10 flex min-h-screen items-center justify-center px-4">
         <div className="w-full max-w-md space-y-8 text-center">
