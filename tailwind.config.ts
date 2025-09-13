@@ -9,6 +9,9 @@ const config: Config = {
   prefix: "",
   theme: {
     extend: {
+      height: {
+        "button-xl": "48px",
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

@@ -13,6 +13,7 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Card, CardContent } from "@/components/ui/card"
+import { useWindowSize } from "@/lib/window-size"
 
 interface ParamsProps {
     filters: ReportPurchaseInvoiceFilters
@@ -65,6 +66,8 @@ export function FiltersReportPurchaseInvoice({ filters, onFilterChange, onFilter
         }
     }
 
+    const windowSize = useWindowSize()
+
     return (
         <Card className="mb-6">
             <CardContent className="pt-6">
@@ -73,7 +76,7 @@ export function FiltersReportPurchaseInvoice({ filters, onFilterChange, onFilter
                     <div className="relative flex-1">
                         <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
                         <Input 
-                            placeholder="Search by invoice number..."
+                            placeholder={ windowSize.typeId == 0 ? "Search by invoice number..." : "Search invoice no..." }
                             className="pl-8"
                             value={filters.keyword}
                             onChange={(e) => onFilterChange({ keyword: e.target.value })}
@@ -118,7 +121,7 @@ export function FiltersReportPurchaseInvoice({ filters, onFilterChange, onFilter
                                 </div>
 
                                 {/* Date Range */}
-                                <div className="grid grid-cols-2 gap-2">
+                                <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
                                     <div className="grid gap-2">
                                         <Label htmlFor="start-date">Start Date</Label>
                                         <div className="relative">
@@ -126,7 +129,7 @@ export function FiltersReportPurchaseInvoice({ filters, onFilterChange, onFilter
                                         <Input
                                             id="start-date"
                                             type="date"
-                                            className="pl-8"
+                                            className="pl-9 h-10"
                                             value={filters.startDate}
                                             onChange={(e) => onFilterChange({ startDate: e.target.value,
                                                 wordingStartDate: new Date(e.target.value).toLocaleDateString("en-GB", {
@@ -144,7 +147,7 @@ export function FiltersReportPurchaseInvoice({ filters, onFilterChange, onFilter
                                             <Input 
                                                 id="end-date"
                                                 type='date'
-                                                className="pl-8"
+                                                className="pl-9 h-10"
                                                 value={filters.endDate}
                                                 onChange={(e) => onFilterChange({ endDate: e.target.value,
                                                     wordingEndDate: new Date(e.target.value).toLocaleDateString("en-GB", {

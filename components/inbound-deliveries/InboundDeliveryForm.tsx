@@ -234,11 +234,11 @@ export function InboundDeliveryForm({
                             <Table>
                                 <TableHeader>
                                     <TableRow>
-                                        <TableHead>Component name</TableHead>
+                                        <TableHead className="min-w-[320px]">Component name</TableHead>
                                         <TableHead className="text-center">Quantity invoice</TableHead>
                                         <TableHead className="text-center">Received</TableHead>
                                         <TableHead className="text-center">Damaged</TableHead>
-                                        <TableHead>Notes</TableHead>
+                                        <TableHead className="min-w-[150px]">Notes</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>

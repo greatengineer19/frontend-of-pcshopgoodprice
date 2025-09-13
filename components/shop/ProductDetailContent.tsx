@@ -239,7 +239,7 @@ export default function ProductDetailContent() {
                     {/* Action Buttons */}
                     <div className="flex flex-col sm:flex-row gap-4">
                         <Button
-                            className="flex-1"
+                            className="flex-1 p-2"
                             size="lg"
                             onClick={handleAddToCart}
                             disabled={isAddingToCart}
@@ -249,7 +249,7 @@ export default function ProductDetailContent() {
                         </Button>
                         <Button 
                             variant="secondary"
-                            className="flex-1"
+                            className="flex-1 p-2"
                             size="lg"
                             onClick={handleBuyNow}
                             disabled={isAddingToCart}

@@ -66,8 +66,7 @@ export function ShopContentProductCard({ product }: ProductCardProps) {
                                 e.preventDefault()
                             }}
                         >
-                            <ShoppingCart className="mr-2 h-4 w-4" />
-                            Add to Cart
+                            Click for Detail
                         </Button>
                     </div>
                 </div>

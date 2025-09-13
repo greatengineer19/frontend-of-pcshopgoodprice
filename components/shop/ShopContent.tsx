@@ -8,6 +8,7 @@ import { Loader2 } from "lucide-react"
 import { ShopContentListWrapper, ShopContentDictionary, ProductBrand } from "@/types/product"
 import type { ProductCategory } from "@/types/computer-component-category"
 import { useUser } from "@/hooks/use-user"
+import { useWindowSize } from "@/lib/window-size"
 
 export default function ShopContent() {
     const [totalItem, setTotalItem] = useState(0)
@@ -27,6 +28,7 @@ export default function ShopContent() {
     const [minRating, setMinRating] = useState(0)
     const item_per_page = 25
     const { user } = useUser()
+    const windowSize = useWindowSize()
 
     function transformResponseProducts(products: ShopContentListWrapper) {
         setTotalItem(products.total_item)
@@ -81,7 +83,7 @@ export default function ShopContent() {
 
     return (
         <div className="container mx-auto px-4 py-8">
-            <h1 className="text-3xl font-bold mb-8">Hi {user ? user.fullname : 'Shoppers'}, shop with us today.</h1>
+            <h1 className={`text-xl font-bold mb-8 ${windowSize.typeId == 0 ? 'text-3xl' : ''}`}>Hi {user ? user.fullname : 'Shoppers'}, shop with us today.</h1>
             <div className="flex flex-col md:flex-row gap-8">
                 <div className="w-full md:w-1/4 lg:w-1/5">
                     <ProductFilters 

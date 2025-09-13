@@ -92,9 +92,6 @@ export default function Home() {
             >
               Login as Seller
             </button>
-            <div className="space-y-4">
-              <p className="font-bold text-l text-white/90 md:text-s">For the best experience, we recommend you to use desktop version.</p>
-            </div>
           </div>
         </div>
       </div>

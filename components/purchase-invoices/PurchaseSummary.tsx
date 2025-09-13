@@ -87,7 +87,7 @@ export function PurchaseSummary({
                     </div>
 
                     <Separator />
-        
+            
                     <div>
                         <h4 className="font-medium mb-2">Selected Products</h4>
                         {selectedInvoiceLines.length === 0 ? (

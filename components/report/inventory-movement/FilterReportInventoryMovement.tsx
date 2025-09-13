@@ -104,7 +104,7 @@ export function FilterReportInventoryMovement({ filters, onFilterChange, onApply
                                 </div>
 
                                 {/* Date Range */}
-                                <div className="grid grid-cols-2 gap-2">
+                                <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
                                     <div className="grid gap-2">
                                         <Label htmlFor="start-date">Start Date</Label>
                                         <div className="relative">

@@ -138,13 +138,13 @@ export function InboundViewModal({ inboundDelivery, isOpen, onClose }: ParamsPro
                                         <Table>
                                             <TableHeader>
                                                 <TableRow>
-                                                    <TableHead>Component Name</TableHead>
-                                                    <TableHead className="text-center">Quantity invoice</TableHead>
+                                                    <TableHead className="min-w-[320px]">Component Name</TableHead>
+                                                    <TableHead className="text-center">Qty invoice</TableHead>
                                                     <TableHead className="text-center">Received</TableHead>
                                                     <TableHead className="text-center">Damaged</TableHead>
                                                     <TableHead className="text-right">Price per unit</TableHead>
                                                     <TableHead className="text-right">Total</TableHead>
-                                                    <TableHead className="text-right">Notes</TableHead>
+                                                    <TableHead className="text-right min-w-[150px]">Notes</TableHead>
                                                 </TableRow>
                                             </TableHeader>
                                             <TableBody>
@@ -156,7 +156,7 @@ export function InboundViewModal({ inboundDelivery, isOpen, onClose }: ParamsPro
                                                         <TableCell className="text-center">{inbound_line.damaged_quantity}</TableCell>
                                                         <TableCell className="text-right">Rp {Number(inbound_line.price_per_unit).toLocaleString()}</TableCell>
                                                         <TableCell className="text-right">Rp {Number(inbound_line.total_line_amount).toLocaleString()}</TableCell>
-                                                        <TableCell className="text-right font-medium max-w-[200px] break-words whitespace-normal">{inbound_line.notes}</TableCell>
+                                                        <TableCell className="text-left font-medium max-w-[200px] break-words whitespace-normal">{inbound_line.notes}</TableCell>
                                                     </TableRow>
                                                 ))}
                                             </TableBody>

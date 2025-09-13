@@ -214,8 +214,8 @@ export function NewAndEditPurchaseInvoiceModal({
 
     return (
         <Dialog open={isNewModalOpen} onOpenChange={closeModal}>
-            <DialogContent className="max-w-[95vw] w-[1400px]">
-                <DialogHeader>
+            <DialogContent className="max-w-[95vw] w-[1400px] max-h-[90vh] flex flex-col">
+                <DialogHeader className="flex-shrink-0">
                     <DialogTitle className="text-xl font-bold">
                         {isEditMode ? `Edit Purchase Invoice: ${initialInvoice?.purchase_invoice_no}` : "New Procurement"}
                     </DialogTitle>
@@ -228,7 +228,7 @@ export function NewAndEditPurchaseInvoiceModal({
                     </DialogDescription>
                 </DialogHeader>
 
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-4">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-4 flex-1 overflow-y-auto min-h-0">
                     {/* Product Selection */}
                     <div className="lg:col-span-2">
                         <SelectProducts products={mappedProducts} onAddProduct={addProductToProcurement} />

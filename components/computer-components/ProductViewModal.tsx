@@ -26,6 +26,7 @@ import { UploadedImageResponse } from "@/types/image"
 import type { ProductParams } from "@/types/product"
 import { fetchProductCategories } from "@/lib/product-service" 
 import { Switch } from "@/components/ui/switch"
+import { useWindowSize } from "@/lib/window-size"
 
 interface ProductViewModalProps {
     product: ProductInFrontend | null,
@@ -186,252 +187,510 @@ export function ProductViewModal(
         setIsDialogOpen(false)
     };
 
+    const windowSize = useWindowSize();
+
     function capitalizeFirstLetter(string: string) {
         if (!string) return '';
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
-    return (
-        <Dialog open={isDialogOpen} onOpenChange={handleClose}>
-            <DialogContent className="sm:max-w-[900px] p-0 overflow-hidden">
-                <DialogClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
-                        <X className="h-4 w-4" />
-                        <span className="sr-only">Close</span>
-                </DialogClose>
+    if (windowSize.typeId == 0) {
+        return (
+            <Dialog open={isDialogOpen} onOpenChange={handleClose}>
+                <DialogContent className="sm:max-w-[900px] p-0 overflow-hidden">
+                    <DialogClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+                            <X className="h-4 w-4" />
+                            <span className="sr-only">Close</span>
+                    </DialogClose>
 
-                {
-                    (
-                        <div className="grid md:grid-cols-2 gap-0">
-                            <div className="relative h-full min-h-[300px] md:min-h-[500px] bg-muted">
-                                <Image 
-                                    src={ product?.image || "/placeholder.svg" }
-                                    alt={ product.name }
-                                    fill
-                                    className="object-cover"
-                                />
-                            </div>
+                    {
+                        (
+                            <div className="grid md:grid-cols-2 gap-0">
+                                <div className="relative h-full min-h-[300px] md:min-h-[500px] bg-muted">
+                                    <Image 
+                                        src={ product?.image || "/placeholder.svg" }
+                                        alt={ product.name }
+                                        fill
+                                        className="object-cover"
+                                    />
+                                </div>
 
-                            { /* Right side - Product Form */ }
-                            <div className="p-6">
-                                <DialogHeader className="flex flex-row items-center justify-between">
-                                    <DialogTitle className="text-x1 font-bold">Product Details</DialogTitle>
-                                    <div className="flex items-center gap-2">
-                                        {
-                                            !isEditMode && (
-                                                <>
-                                                    <Button
-                                                        variant="outline"
-                                                        size="sm"
-                                                        onClick={handleDeleteClick}
-                                                        className="flex items-center gap-1 text-destructive hover:text-destructive"
-                                                        disabled={isLoading}>
-                                                        <Trash2 className="h-4 w-4" />
-                                                    </Button>
-                                                    <Button variant="outline" size="sm" onClick={toggleEditMode}
-                                                    className="flex items-center gap-1"
-                                                    disabled={isLoading}>
-                                                        <Edit className="h-4 w-4"/>
-                                                        Edit
-                                                    </Button>
-                                                </>
-                                            )
-                                        }
-                                    </div>
-                                </DialogHeader>
-
-                                <form onSubmit={isEditMode ? handleUpdateProduct : undefined} className="grid gap-4 py-4 mt-2">
-                                    <Tabs defaultValue="info" className="w-full">
-                                        <TabsList className="grid w-full grid-cols-2">
-                                            <TabsTrigger value="info">Product Info</TabsTrigger>
-                                            <TabsTrigger value="pricing">Pricing</TabsTrigger>
-                                        </TabsList>
-
-                                        {/* Product Info Tab */}
-                                        <TabsContent value="info" className="space-y-4 py-4">
-                                            <div className="grid gap-2">
-                                            <Label htmlFor="name">Name</Label>
-                                            <Input
-                                                id="name"
-                                                defaultValue={product.name}
-                                                disabled={!isEditMode || isLoading}
-                                                onChange={(e) => handleEditProductChange("name", e.target.value)}
-                                                className={!isEditMode ? "opacity-80" : ""}
-                                                required
-                                            />
-                                        </div>
-
-                                        <div className="grid gap-2">
-                                            <Label htmlFor="component_category_name">Category</Label>
-                                            <Select 
-                                                defaultValue={product.component_category_name}
-                                                disabled={!isEditMode || isLoading}
-                                                onValueChange={isEditMode ? (value) => handleEditProductChange("component_category_name", value) : undefined}
-                                                required
-                                            >
-                                                <SelectTrigger>
-                                                    <SelectValue placeholder="Select a category"/>
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    {categories.map((category) => (
-                                                        <SelectItem key={category} value={category}>
-                                                            {category}
-                                                        </SelectItem>
-                                                    ))}
-                                                </SelectContent>
-                                            </Select>
-                                        </div>
-
-                                        <div className="grid gap-2">
-                                            <Label htmlFor="description">Description</Label>
-                                            <Textarea 
-                                                id="description"
-                                                rows={4}
-                                                defaultValue={product.description || ""}
-                                                disabled={!isEditMode || isLoading}
-                                                className={!isEditMode ? "opacity-80" : ""}
-                                                onChange={(e) => handleEditProductChange("description", e.target.value)}
-                                            />
-                                        </div>
-
-                                        {
-                                            isEditMode && (
-                                                <div className="grid gap-2">
-                                                    <Label htmlFor="image">Product Image</Label>
-                                                    <div className="flex items-center gap-4">
-                                                        <div className="relative h-24 w-24 border-gray-200 border rounded overflow-hidden">
-                                                            <Image 
-                                                                src={product.image || "/placeholder.svg"}
-                                                                alt="Product preview"
-                                                                fill
-                                                                className="object-cover"
-                                                            />
-                                                        </div>
-                                                        <input 
-                                                            type="file"
-                                                            ref={fileInputRef}
-                                                            onChange={handleFileSelect}
-                                                            accept="image/*"
-                                                            className="hidden"
-                                                        />
+                                { /* Right side - Product Form */ }
+                                <div className="p-6">
+                                    <DialogHeader className="flex flex-row items-center justify-between">
+                                        <DialogTitle className="text-x1 font-bold">Product Detail</DialogTitle>
+                                        <div className="flex items-center gap-2">
+                                            {
+                                                !isEditMode && (
+                                                    <>
                                                         <Button
-                                                            type="button"
                                                             variant="outline"
-                                                            className="h-10"
-                                                            onClick={handleUploadClick}
+                                                            size="sm"
+                                                            onClick={handleDeleteClick}
+                                                            className="flex items-center gap-1 text-destructive hover:text-destructive"
                                                             disabled={isLoading}>
-                                                            <Upload className="h-4 w-4 mr-2" />
-                                                            Change Image
+                                                            <Trash2 className="h-4 w-4" />
+                                                        </Button>
+                                                        <Button variant="outline" size="sm" onClick={toggleEditMode}
+                                                        className="flex items-center gap-1"
+                                                        disabled={isLoading}>
+                                                            <Edit className="h-4 w-4"/>
+                                                            Edit
+                                                        </Button>
+                                                    </>
+                                                )
+                                            }
+                                        </div>
+                                    </DialogHeader>
+
+                                    <form onSubmit={isEditMode ? handleUpdateProduct : undefined} className="grid gap-4 py-4 mt-2">
+                                        <Tabs defaultValue="info" className="w-full">
+                                            <TabsList className="grid w-full grid-cols-2">
+                                                <TabsTrigger value="info">Product Info</TabsTrigger>
+                                                <TabsTrigger value="pricing">Pricing</TabsTrigger>
+                                            </TabsList>
+
+                                            {/* Product Info Tab */}
+                                            <TabsContent value="info" className="space-y-4 py-4">
+                                                <div className="grid gap-2">
+                                                <Label htmlFor="name">Name</Label>
+                                                <Input
+                                                    id="name"
+                                                    defaultValue={product.name}
+                                                    disabled={!isEditMode || isLoading}
+                                                    onChange={(e) => handleEditProductChange("name", e.target.value)}
+                                                    className={!isEditMode ? "opacity-80" : ""}
+                                                    required
+                                                />
+                                            </div>
+
+                                            <div className="grid gap-2">
+                                                <Label htmlFor="component_category_name">Category</Label>
+                                                <Select 
+                                                    defaultValue={product.component_category_name}
+                                                    disabled={!isEditMode || isLoading}
+                                                    onValueChange={isEditMode ? (value) => handleEditProductChange("component_category_name", value) : undefined}
+                                                    required
+                                                >
+                                                    <SelectTrigger>
+                                                        <SelectValue placeholder="Select a category"/>
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        {categories.map((category) => (
+                                                            <SelectItem key={category} value={category}>
+                                                                {category}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
+                                            </div>
+
+                                            <div className="grid gap-2">
+                                                <Label htmlFor="description">Description</Label>
+                                                <Textarea 
+                                                    id="description"
+                                                    rows={4}
+                                                    defaultValue={product.description || ""}
+                                                    disabled={!isEditMode || isLoading}
+                                                    className={!isEditMode ? "opacity-80" : ""}
+                                                    onChange={(e) => handleEditProductChange("description", e.target.value)}
+                                                />
+                                            </div>
+
+                                            {
+                                                isEditMode && (
+                                                    <div className="grid gap-2">
+                                                        <Label htmlFor="image">Product Image</Label>
+                                                        <div className="flex items-center gap-4">
+                                                            <div className="relative h-24 w-24 border-gray-200 border rounded overflow-hidden">
+                                                                <Image 
+                                                                    src={product.image || "/placeholder.svg"}
+                                                                    alt="Product preview"
+                                                                    fill
+                                                                    className="object-cover"
+                                                                />
+                                                            </div>
+                                                            <input 
+                                                                type="file"
+                                                                ref={fileInputRef}
+                                                                onChange={handleFileSelect}
+                                                                accept="image/*"
+                                                                className="hidden"
+                                                            />
+                                                            <Button
+                                                                type="button"
+                                                                variant="outline"
+                                                                className="h-10"
+                                                                onClick={handleUploadClick}
+                                                                disabled={isLoading}>
+                                                                <Upload className="h-4 w-4 mr-2" />
+                                                                Change Image
+                                                            </Button>
+                                                        </div>
+                                                        <p className="text-sm text-muted-foreground">
+                                                            Recommended: 1000x1000px, max 5MB
+                                                        </p>
+                                                    </div>
+                                                )
+                                            }
+
+                                            {
+                                                isEditMode && (
+                                                    <div className="flex justify-end gap-2 mt-4">
+                                                        <Button type="button" variant="outline" onClick={toggleEditMode} disabled={isLoading}>
+                                                            Cancel
+                                                        </Button>
+                                                        <Button type="submit" className="flex items-center gap-1" disabled={isLoading}>
+                                                            <Save className="h-4 w-4" />
+                                                            Update
                                                         </Button>
                                                     </div>
-                                                    <p className="text-sm text-muted-foreground">
-                                                        Recommended: 1000x1000px, max 5MB
+                                                )
+                                            }
+                                            </TabsContent>
+
+                                            {/* Pricing Tab */}
+                                            <TabsContent value="pricing" className="space-y-4 py-4">
+                                                <div className="p-3 border rounded-lg">
+                                                    <div className="grid gap-2">
+                                                        <Label htmlFor="default-price" className="required">
+                                                            Default Price
+                                                        </Label>
+                                                        <Input 
+                                                            id="default-price"
+                                                            type="number"
+                                                            placeholder="0.00"
+                                                            value={
+                                                                defaultPrice === "0" || defaultPrice === "" 
+                                                                    ? "" 
+                                                                    : Number(defaultPrice) % 1 === 0 
+                                                                        ? parseInt(defaultPrice) 
+                                                                        : parseFloat(defaultPrice).toFixed(2)
+                                                            }
+                                                            onChange={(e) => {
+                                                                const value = e.target.value;
+                                                                if (value === "" || /^\d*\.?\d*$/.test(value)) {
+                                                                    setDefaultPrice(value);
+                                                                }
+                                                            }}
+                                                            className="mt-1"
+                                                            step="0.1"
+                                                            min="0"
+                                                            required
+                                                            disabled={!isEditMode || isLoading}
+                                                        />
+                                                    </div>
+                                                </div>
+
+                                                <div className="space-y-2">
+                                                    <Label className="text-base font-semibold">Daily Pricing (Optional)</Label>
+                                                    <div className="space-y-2 max-h-64 overflow-y-auto pr-2">
+                                                        {
+                                                            dayPricing.map((priceSetting, index) => (
+                                                                <div key={priceSetting.day_type} className="flex items-center justify-between p-3 border rounded-lg">
+                                                                    <div className="flex-1 mr-4">
+                                                                        <Label className="font-medium">{capitalizeFirstLetter(priceSetting.day_type)}</Label>
+                                                                        <Input
+                                                                            type="number"
+                                                                            placeholder="0.00"
+                                                                            value={
+                                                                                Number(priceSetting.price_per_unit) === 0
+                                                                                    ? "" 
+                                                                                    : Number(priceSetting.price_per_unit) % 1 === 0 
+                                                                                        ? Number(priceSetting.price_per_unit).toFixed(0)
+                                                                                        : Number(priceSetting.price_per_unit).toFixed(2)
+                                                                            }
+                                                                            onChange={(e) => {
+                                                                                const value = e.target.value;
+                                                                                if (value === "" || /^\d*\.?\d*$/.test(value)) {
+                                                                                    handlePriceChange(index, value);
+                                                                                }
+                                                                            }}
+                                                                            className="mt-1"
+                                                                            step="0.1"
+                                                                            min="0"
+                                                                            disabled={!isEditMode || isLoading}
+                                                                        />
+                                                                    </div>
+                                                                    <div className="flex items-center space-x-2">
+                                                                        <Label className="text-sm">Active</Label>
+                                                                        <Switch
+                                                                            checked={priceSetting.active}
+                                                                            onCheckedChange={(checked) => handleActiveToggle(index, checked)}
+                                                                            disabled={!isEditMode || isLoading}
+                                                                        />
+                                                                    </div>
+                                                                </div>
+                                                            ))
+                                                        }
+                                                    </div>
+                                                    <p className="text-sm text-muted-foreground mt-2">
+                                                        Activate daily pricing for specific days if different from the default.
                                                     </p>
                                                 </div>
-                                            )
-                                        }
+                                            </TabsContent>
+                                        </Tabs>
+                                    </form>
+                                </div>
+                            </div>
+                        )
+                    }
+                </DialogContent>
+            </Dialog>
+        )
+    } else {
+        return (
+            <Dialog open={isDialogOpen} onOpenChange={handleClose}>
+                <DialogContent className="sm:max-w-[900px] p-0 overflow-hidden">
+                    <DialogClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+                            <X className="h-4 w-4" />
+                            <span className="sr-only">Close</span>
+                    </DialogClose>
 
-                                        {
-                                            isEditMode && (
-                                                <div className="flex justify-end gap-2 mt-4">
-                                                    <Button type="button" variant="outline" onClick={toggleEditMode} disabled={isLoading}>
-                                                        Cancel
-                                                    </Button>
-                                                    <Button type="submit" className="flex items-center gap-1" disabled={isLoading}>
-                                                        <Save className="h-4 w-4" />
-                                                        Update
-                                                    </Button>
-                                                </div>
-                                            )
-                                        }
-                                        </TabsContent>
+                    {
+                        (
+                            <div className="flex flex-col md:grid md:grid-cols-2 gap-0 max-h-[90vh] md:max-h-[80vh]">
+                            <div className="relative h-48 sm:h-64 md:h-full md:min-h-[500px] bg-muted order-1 md:order-none flex-shrink-0">
+                                <Image src={product?.image || "/placeholder.svg"} alt={product.name} fill className="object-cover" />
+                            </div>
 
-                                        {/* Pricing Tab */}
-                                        <TabsContent value="pricing" className="space-y-4 py-4">
-                                            <div className="p-3 border rounded-lg">
-                                                <div className="grid gap-2">
-                                                    <Label htmlFor="default-price" className="required">
-                                                        Default Price
-                                                    </Label>
-                                                    <Input 
-                                                        id="default-price"
-                                                        type="number"
-                                                        placeholder="0.00"
-                                                        value={
-                                                            defaultPrice === "0" || defaultPrice === "" 
-                                                                ? "" 
-                                                                : Number(defaultPrice) % 1 === 0 
-                                                                    ? parseInt(defaultPrice) 
-                                                                    : parseFloat(defaultPrice).toFixed(2)
-                                                        }
-                                                        onChange={(e) => {
-                                                            const value = e.target.value;
-                                                            if (value === "" || /^\d*\.?\d*$/.test(value)) {
-                                                                setDefaultPrice(value);
-                                                            }
-                                                        }}
-                                                        className="mt-1"
-                                                        step="0.1"
-                                                        min="0"
-                                                        required
-                                                        disabled={!isEditMode || isLoading}
-                                                    />
-                                                </div>
+                            <div className="p-4 sm:p-6 order-2 md:order-none overflow-y-auto">
+                                <DialogHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0 mb-4">
+                                <DialogTitle className="text-lg sm:text-xl font-bold">Product Detail</DialogTitle>
+                                <div className="flex items-center gap-2 self-start sm:self-auto">
+                                    {!isEditMode && (
+                                    <>
+                                        <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={handleDeleteClick}
+                                        className="flex items-center gap-1 text-destructive hover:text-destructive bg-transparent"
+                                        disabled={isLoading}
+                                        >
+                                        <Trash2 className="h-4 w-4" />
+                                        <span className="hidden xs:inline">Delete</span>
+                                        </Button>
+                                        <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={toggleEditMode}
+                                        className="flex items-center gap-1 bg-transparent"
+                                        disabled={isLoading}
+                                        >
+                                        <Edit className="h-4 w-4" />
+                                        <span className="hidden xs:inline">Edit</span>
+                                        </Button>
+                                    </>
+                                    )}
+                                </div>
+                                </DialogHeader>
+
+                                <form onSubmit={isEditMode ? () => {} : undefined} className="grid gap-4 py-2">
+                                <Tabs defaultValue="info" className="w-full">
+                                    <TabsList className="grid w-full grid-cols-2 h-10 sm:h-9">
+                                    <TabsTrigger value="info" className="text-sm">
+                                        Product Info
+                                    </TabsTrigger>
+                                    <TabsTrigger value="pricing" className="text-sm">
+                                        Pricing
+                                    </TabsTrigger>
+                                    </TabsList>
+
+                                    <TabsContent value="info" className="space-y-3 sm:space-y-4 py-3 sm:py-4">
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="name">Name</Label>
+                                        <Input
+                                        id="name"
+                                        defaultValue={product.name}
+                                        disabled={!isEditMode || isLoading}
+                                        onChange={(e) => handleEditProductChange("name", e.target.value)}
+                                        className={!isEditMode ? "opacity-80" : ""}
+                                        required
+                                        />
+                                    </div>
+
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="component_category_name">Category</Label>
+                                        <Select
+                                        defaultValue={product.component_category_name}
+                                        disabled={!isEditMode || isLoading}
+                                        onValueChange={
+                                            isEditMode ? (value) => handleEditProductChange("component_category_name", value) : undefined
+                                        }
+                                        required
+                                        >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Select a category" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {categories.map((category) => (
+                                            <SelectItem key={category} value={category}>
+                                                {category}
+                                            </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                        </Select>
+                                    </div>
+
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="description">Description</Label>
+                                        <Textarea
+                                        id="description"
+                                        rows={3}
+                                        className={`sm:rows-4 ${!isEditMode ? "opacity-80" : ""}`}
+                                        defaultValue={product.description || ""}
+                                        disabled={!isEditMode || isLoading}
+                                        onChange={(e) => handleEditProductChange("description", e.target.value)}
+                                        />
+                                    </div>
+
+                                    {isEditMode && (
+                                        <div className="grid gap-2">
+                                        <Label htmlFor="image">Product Image</Label>
+                                        <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
+                                            <div className="relative h-20 w-20 sm:h-24 sm:w-24 border-gray-200 border rounded overflow-hidden flex-shrink-0">
+                                            <Image
+                                                src={product.image || "/placeholder.svg"}
+                                                alt="Product preview"
+                                                fill
+                                                className="object-cover"
+                                            />
                                             </div>
+                                            <div className="flex flex-col gap-2">
+                                            <input
+                                                type="file"
+                                                ref={fileInputRef}
+                                                onChange={handleFileSelect}
+                                                accept="image/*"
+                                                className="hidden"
+                                            />
+                                            <Button
+                                                type="button"
+                                                variant="outline"
+                                                className="h-10 w-full sm:w-auto bg-transparent"
+                                                onClick={handleUploadClick}
+                                                disabled={isLoading}
+                                            >
+                                                <Upload className="h-4 w-4 mr-2" />
+                                                Change Image
+                                            </Button>
+                                            <p className="text-xs sm:text-sm text-muted-foreground">Recommended: 1000x1000px, max 5MB</p>
+                                            </div>
+                                        </div>
+                                        </div>
+                                    )}
 
-                                            <div className="space-y-2">
-                                                <Label className="text-base font-semibold">Daily Pricing (Optional)</Label>
-                                                <div className="space-y-2 max-h-64 overflow-y-auto pr-2">
-                                                    {
-                                                        dayPricing.map((priceSetting, index) => (
-                                                            <div key={priceSetting.day_type} className="flex items-center justify-between p-3 border rounded-lg">
-                                                                <div className="flex-1 mr-4">
-                                                                    <Label className="font-medium">{capitalizeFirstLetter(priceSetting.day_type)}</Label>
-                                                                    <Input
-                                                                        type="number"
-                                                                        placeholder="0.00"
-                                                                        value={
-                                                                            Number(priceSetting.price_per_unit) === 0
-                                                                                ? "" 
-                                                                                : Number(priceSetting.price_per_unit) % 1 === 0 
-                                                                                    ? Number(priceSetting.price_per_unit).toFixed(0)
-                                                                                    : Number(priceSetting.price_per_unit).toFixed(2)
-                                                                        }
-                                                                        onChange={(e) => {
-                                                                            const value = e.target.value;
-                                                                            if (value === "" || /^\d*\.?\d*$/.test(value)) {
-                                                                                handlePriceChange(index, value);
-                                                                            }
-                                                                        }}
-                                                                        className="mt-1"
-                                                                        step="0.1"
-                                                                        min="0"
-                                                                        disabled={!isEditMode || isLoading}
-                                                                    />
-                                                                </div>
-                                                                <div className="flex items-center space-x-2">
-                                                                    <Label className="text-sm">Active</Label>
-                                                                    <Switch
-                                                                        checked={priceSetting.active}
-                                                                        onCheckedChange={(checked) => handleActiveToggle(index, checked)}
-                                                                        disabled={!isEditMode || isLoading}
-                                                                    />
-                                                                </div>
-                                                            </div>
-                                                        ))
+                                    {isEditMode && (
+                                        <div className="flex flex-col sm:flex-row sm:justify-end gap-2 sm:gap-2 mt-4">
+                                        <Button
+                                            type="button"
+                                            variant="outline"
+                                            onClick={toggleEditMode}
+                                            disabled={isLoading}
+                                            className="w-full sm:w-auto bg-transparent"
+                                        >
+                                            Cancel
+                                        </Button>
+                                        <Button
+                                            type="submit"
+                                            className="flex items-center justify-center gap-1 w-full sm:w-auto"
+                                            disabled={isLoading}
+                                        >
+                                            <Save className="h-4 w-4" />
+                                            Update
+                                        </Button>
+                                        </div>
+                                    )}
+                                    </TabsContent>
+
+                                    <TabsContent value="pricing" className="space-y-3 sm:space-y-4 py-3 sm:py-4">
+                                    <div className="p-3 border rounded-lg">
+                                        <div className="grid gap-2">
+                                        <Label htmlFor="default-price" className="required">
+                                            Default Price
+                                        </Label>
+                                        <Input
+                                            id="default-price"
+                                            type="number"
+                                            placeholder="0.00"
+                                            value={
+                                            defaultPrice === "0" || defaultPrice === ""
+                                                ? ""
+                                                : Number(defaultPrice) % 1 === 0
+                                                ? Number.parseInt(defaultPrice)
+                                                : Number.parseFloat(defaultPrice).toFixed(2)
+                                            }
+                                            onChange={(e) => {
+                                            const value = e.target.value
+                                            if (value === "" || /^\d*\.?\d*$/.test(value)) {
+                                                setDefaultPrice(value)
+                                            }
+                                            }}
+                                            className="mt-1"
+                                            step="0.1"
+                                            min="0"
+                                            required
+                                            disabled={!isEditMode || isLoading}
+                                        />
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <Label className="text-base font-semibold">Daily Pricing (Optional)</Label>
+                                        <div className="space-y-2 max-h-48 sm:max-h-64 overflow-y-auto pr-1 sm:pr-2">
+                                        {dayPricing.map((priceSetting, index) => (
+                                            <div
+                                            key={priceSetting.day_type}
+                                            className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 border rounded-lg gap-3 sm:gap-0"
+                                            >
+                                            <div className="flex-1 sm:mr-4">
+                                                <Label className="font-medium">{capitalizeFirstLetter(priceSetting.day_type)}</Label>
+                                                <Input
+                                                type="number"
+                                                placeholder="0.00"
+                                                value={
+                                                    Number(priceSetting.price_per_unit) === 0
+                                                    ? ""
+                                                    : Number(priceSetting.price_per_unit) % 1 === 0
+                                                        ? Number(priceSetting.price_per_unit).toFixed(0)
+                                                        : Number(priceSetting.price_per_unit).toFixed(2)
+                                                }
+                                                onChange={(e) => {
+                                                    const value = e.target.value
+                                                    if (value === "" || /^\d*\.?\d*$/.test(value)) {
+                                                    handlePriceChange(index, value)
                                                     }
-                                                </div>
-                                                <p className="text-sm text-muted-foreground mt-2">
-                                                    Activate daily pricing for specific days if different from the default.
-                                                </p>
+                                                }}
+                                                className="mt-1"
+                                                step="0.1"
+                                                min="0"
+                                                disabled={!isEditMode || isLoading}
+                                                />
                                             </div>
-                                        </TabsContent>
-                                    </Tabs>
+                                            <div className="flex items-center justify-between sm:justify-start space-x-2">
+                                                <Label className="text-sm">Active</Label>
+                                                <Switch
+                                                checked={priceSetting.active}
+                                                onCheckedChange={(checked) => handleActiveToggle(index, checked)}
+                                                disabled={!isEditMode || isLoading}
+                                                />
+                                            </div>
+                                            </div>
+                                        ))}
+                                        </div>
+                                        <p className="text-xs sm:text-sm text-muted-foreground mt-2">
+                                        Activate daily pricing for specific days if different from the default.
+                                        </p>
+                                    </div>
+                                    </TabsContent>
+                                </Tabs>
                                 </form>
                             </div>
-                        </div>
-                    )
-                }
-            </DialogContent>
-        </Dialog>
-    )
+                            </div>
+                        )
+                    }
+                </DialogContent>
+            </Dialog>
+        )
+    }
 }
