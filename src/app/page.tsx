@@ -6,6 +6,7 @@ import { fetchUserSuperBuyer, fetchUserDefault } from "@/lib/user-service"
 import type { GetUserResponseAPI, UserRole } from "@/types/user"
 import { useUser } from "@/hooks/use-user"
 import { redirect } from 'next/navigation'
+import { useWindowSize } from "@/lib/window-size";
 
 export default function Home() {
   const SECRET_KEY_NAME = 'secret_key';
@@ -67,10 +68,9 @@ export default function Home() {
         <div className="absolute inset-0 bg-black/50" />
       </div>
 
-
       {/* Content */}
       <div className="relative z-10 flex min-h-screen items-center justify-center px-4">
-        <div className="w-full max-w-md space-y-8 text-center">
+        <div className="w-full max-w-md space-y-8 text-center -mt-32">
           {/* Logo/Title */}
           <div className="space-y-4">
             <h1 className="text-4xl font-bold text-white md:text-5xl lg:text-6xl">Welcome</h1>
