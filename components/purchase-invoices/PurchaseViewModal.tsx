@@ -154,7 +154,7 @@ export function PurchaseViewModal({ invoice, isViewModalOpen, closeViewModal, on
             </Dialog>
         )
     } else {
-        (
+        return (
             <Dialog open={isViewModalOpen} onOpenChange={closeViewModal}>
             <DialogContent className="max-w-[95vw] w-full max-h-[95vh] h-full sm:h-[90vh] sm:w-[600px] lg:w-[900px] xl:w-[1200px] flex flex-col">
                 <DialogHeader className="flex-shrink-0">
@@ -227,17 +227,21 @@ export function PurchaseViewModal({ invoice, isViewModalOpen, closeViewModal, on
                         {invoice.purchase_invoice_lines.map((invoice_line) => (
                             <div key={invoice_line.id} className="border rounded-lg p-3 space-y-2">
                             <div className="font-medium text-sm break-words">{invoice_line.component_name}</div>
-                            <div className="grid grid-cols-2 gap-2 text-xs">
-                                <div>
-                                <span className="text-muted-foreground">Qty:</span> {invoice_line.quantity}
+                            <div className="space-y-1 text-xs">
+                                <div className="flex justify-between items-center">
+                                <span className="text-muted-foreground">Quantity:</span>
+                                <span className="font-medium">{invoice_line.quantity}</span>
                                 </div>
-                                <div>
-                                <span className="text-muted-foreground">Unit:</span> Rp{" "}
-                                {Number(invoice_line.price_per_unit).toLocaleString()}
+                                <div className="flex justify-between items-center">
+                                <span className="text-muted-foreground">Unit Price:</span>
+                                <span className="font-medium">Rp {Number(invoice_line.price_per_unit).toLocaleString()}</span>
                                 </div>
                             </div>
-                            <div className="text-right font-medium text-sm">
-                                Total: Rp {Number(invoice_line.total_line_amount).toLocaleString()}
+                            <div className="border-t pt-2 mt-2">
+                                <div className="flex justify-between items-center font-medium text-sm">
+                                <span>Total:</span>
+                                <span>Rp {Number(invoice_line.total_line_amount).toLocaleString()}</span>
+                                </div>
                             </div>
                             </div>
                         ))}
@@ -275,11 +279,11 @@ export function PurchaseViewModal({ invoice, isViewModalOpen, closeViewModal, on
                         </div>
                     </div>
                     </div>
+                </div>
 
-                    <div className="flex flex-col sm:flex-row sm:justify-end gap-2 sm:gap-8 font-medium text-base sm:text-lg">
+                <div className="flex flex-col sm:flex-row sm:justify-end gap-2 sm:gap-8 font-medium text-base sm:text-lg">
                     <span className="text-muted-foreground sm:text-foreground">Total Amount:</span>
                     <span className="text-lg sm:text-xl">Rp {Number(invoice.sum_total_line_amounts).toLocaleString()}</span>
-                    </div>
                 </div>
                 </div>
 
