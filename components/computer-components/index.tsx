@@ -62,6 +62,9 @@ export default function ComponentComputerComponentsIndex() {
 	
 				const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/upload_url`, {
 					method: 'POST',
+					headers: {
+						"origin": "pcshopgoodprice.com"
+					},
 					body: formData,
 				});
 	

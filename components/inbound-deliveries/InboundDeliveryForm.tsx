@@ -92,6 +92,9 @@ export function InboundDeliveryForm({
                 const response_upload_images = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/multi_upload_url`, {
                     method: 'POST',
                     body: imageFormData,
+                    headers: {
+                        "origin": "pcshopgoodprice.com"
+                    },
                 });
 
                 if (!response_upload_images.ok) {
