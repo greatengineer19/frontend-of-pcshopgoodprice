@@ -88,7 +88,7 @@ export function ReportTable({ reportData, isLoading, currentPage, onPageChange }
             {/* Pagination */}
             <div className="flex items-center justify-between">
                 <div className="text-sm text-muted-foreground">
-                    Showing page {paging.page} of {Math.ceil(paging.total_item / 10)}
+                    Showing page {paging.page} of {Math.ceil(paging.total_item / 25)}
                 </div>
                 <div className="flex items-center space-x-2">
                     <Button 
@@ -101,7 +101,7 @@ export function ReportTable({ reportData, isLoading, currentPage, onPageChange }
                         <span className="sr-only">Previous Page</span>
                     </Button>
                     <div className="text-sm">
-                        Page {paging.page} of {Math.ceil(paging.total_item / 10)}
+                        Page {paging.page} of {Math.ceil(paging.total_item / 25)}
                     </div>
                     <Button 
                         variant="outline"
