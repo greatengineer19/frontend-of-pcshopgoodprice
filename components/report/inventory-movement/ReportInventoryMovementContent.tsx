@@ -3,6 +3,7 @@
 import { useReportInventoryMovement } from "@/hooks/use-report-inventory-movement"
 import { FilterReportInventoryMovement } from "./FilterReportInventoryMovement"
 import { ReportTable } from "./ReportTable"
+import { MiniChatRoom } from "@/components/mini-chat-room/MiniChatRoom"
 
 export default function ReportInventoryMovementContent() {
     const {
@@ -36,6 +37,8 @@ export default function ReportInventoryMovementContent() {
                 currentPage={currentPage}
                 onPageChange={changePage}
             />
+
+            <MiniChatRoom reportData={reportData} />
         </div>
     )
 }

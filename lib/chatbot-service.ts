@@ -2,8 +2,7 @@ import { ReportData } from "@/types/report";
 
 export const fetchAIAnalyzeReport = async (reportData: ReportData, userInput: string): Promise<string> => {
     const payload = {
-        report_data: reportData,
-        user_input: userInput
+        user_input: userInput + ', report body:' + JSON.stringify(reportData.report_body) + ', report_headers: ' + JSON.stringify(reportData.report_headers)
     }
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/chatbot/analyze_report`, {
         method: 'POST',
