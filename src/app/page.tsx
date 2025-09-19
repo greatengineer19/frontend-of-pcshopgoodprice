@@ -74,6 +74,7 @@ export default function Home() {
           {/* Logo/Title */}
           <div className="space-y-4">
             <h1 className="text-4xl font-bold text-white md:text-5xl lg:text-6xl">Welcome</h1>
+            <p className="text-lg text-white/90 md:text-xl">We have AI assistant ready, choose Seller mode and view Report</p>
             <p className="text-lg text-white/90 md:text-xl">Choose your login type</p>
           </div>
 
