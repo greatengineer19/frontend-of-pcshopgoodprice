@@ -77,6 +77,21 @@
   }
 }
 
+@layer components {
+  .chat-gradient-bg {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  }
+
+  .chat-bubble-user {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  }
+
+  .chat-bubble-ai {
+    background: hsl(var(--muted));
+    border: 1px solid hsl(var(--border));
+  }
+}
+
 /* Sonner Toast Custom Styles */
 [data-sonner-toast][data-type="error"] {
   background-color: var(--toast-error-background) !important;

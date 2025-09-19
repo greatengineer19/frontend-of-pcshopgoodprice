@@ -3,6 +3,7 @@
 import { useReportPurchaseInvoice } from "@/hooks/use-report-purchase-invoice"
 import { FiltersReportPurchaseInvoice } from "./FiltersReportPurchaseInvoice"
 import { ReportTable } from "./ReportTable"
+import { MiniChatRoom } from "@/components/mini-chat-room/MiniChatRoom"
 
 export default function PurchaseInvoiceReportContent() {
     const {
@@ -39,6 +40,8 @@ export default function PurchaseInvoiceReportContent() {
                 currentPage={currentPage}
                 onPageChange={changePage}
             />
+
+            <MiniChatRoom reportData={reportData} />
         </div>
     )
 }
