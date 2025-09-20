@@ -129,14 +129,19 @@ export function Navbar() {
         title: "Report",
         items: [
             {
-            name: "Report Purchase Invoice",
-            href: "/report/purchase_invoices",
-            description: "View purchase invoice reports",
+                name: "Report Purchase Invoice",
+                href: "/report/purchase_invoices",
+                description: "View purchase invoice reports",
             },
             {
-            name: "Report Inventory Movement",
-            href: "/report/inventories",
-            description: "View inventory movement reports",
+                name: "Report Inventory Movement",
+                href: "/report/inventories",
+                description: "View inventory movement reports",
+            },
+            {
+                name: "Query Performance Analysis",
+                href: "/report/query_analysis",
+                description: "Analyze performance of 3 purchase invoices query",
             },
         ],
         },
@@ -373,17 +378,30 @@ export function Navbar() {
                                     </NavigationMenuLink>
                                     </li>
                                     <li>
-                                    <NavigationMenuLink asChild>
-                                        <Link
-                                        href="/report/inventories"
-                                        className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                                        >
-                                        <div className="text-sm font-medium">Report Inventory Movement</div>
-                                        <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                                            View inventory movement reports
-                                        </p>
-                                        </Link>
-                                    </NavigationMenuLink>
+                                        <NavigationMenuLink asChild>
+                                            <Link
+                                            href="/report/inventories"
+                                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                                            >
+                                            <div className="text-sm font-medium">Report Inventory Movement</div>
+                                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                                                View inventory movement reports
+                                            </p>
+                                            </Link>
+                                        </NavigationMenuLink>
+                                    </li>
+                                    <li>
+                                        <NavigationMenuLink asChild>
+                                            <Link
+                                            href="/report/query_analysis"
+                                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                                            >
+                                            <div className="text-sm font-medium">Query Performance Analysis</div>
+                                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                                                Analyze performance of 3 purchase invoices query
+                                            </p>
+                                            </Link>
+                                        </NavigationMenuLink>
                                     </li>
                                 </ul>
                                 </NavigationMenuContent>
