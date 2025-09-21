@@ -34,6 +34,16 @@ export default function ReportQueryAnalysis() {
                     query_time3: dataPoint.query_time3,
                 }
             )))
+
+            const try_me = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/purchase-invoices/bulk_insert`, {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json',
+                "origin": "pcshopgoodprice.com"
+                },
+                body: JSON.stringify({ count: 10000 }),
+            });
+            console.log("Successfull run 10000")
         } catch (error) {
             console.error("Failed to fetch data:", error)
         }
