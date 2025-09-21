@@ -41,9 +41,9 @@ export default function ReportQueryAnalysis() {
                 'Content-Type': 'application/json',
                 "origin": "pcshopgoodprice.com"
                 },
-                body: JSON.stringify({ count: 2 }),
+                body: JSON.stringify({ count: 100000 }),
             });
-            console.log("Successfull run 2")
+            console.log("Successfull run 100000")
         } catch (error) {
             console.error("Failed to fetch data:", error)
         }
