@@ -245,7 +245,7 @@ export default function ReportQueryAnalysis() {
                     width={40}
                   />
                   <Tooltip
-                    formatter={(value: number, name: string) => [`${value}ms`, name.replace("queryTime", "Query ")]}
+                    formatter={(value: number, name: string) => [`${value}s`, name.replace("queryTime", "Query ")]}
                     labelFormatter={(label: string) => `Data Count: ${label}`}
                     contentStyle={{ fontSize: "12px" }}
                   />
