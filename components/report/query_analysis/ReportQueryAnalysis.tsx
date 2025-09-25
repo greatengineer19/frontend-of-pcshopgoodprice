@@ -34,16 +34,6 @@ export default function ReportQueryAnalysis() {
                     query_time3: dataPoint.query_time3,
                 }
             )))
-
-            const try_me = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/purchase-invoices/bulk_insert`, {
-                method: 'POST',
-                headers: {
-                'Content-Type': 'application/json',
-                "origin": "pcshopgoodprice.com"
-                },
-                body: JSON.stringify({ count: 10000 }),
-            });
-            console.log("Successfull run 10000")
         } catch (error) {
             console.error("Failed to fetch data:", error)
         }
@@ -117,25 +107,52 @@ export default function ReportQueryAnalysis() {
 
     const algorithms = [
         {
-            id: "linear-search",
-            name: "Algorithm 1: Linear Search",
+            id: "q1-limit-offset",
+            name: "Query 1: using Limit and Offset",
             color: "#3b82f6",
-            code: `select * from purchase_invoices
-                   query #1`,
+            code: `repeat offset from 0 to 900000, increment by 100000
+            
+                    EXPLAIN ANALYZE select pi.* 
+                    FROM purchase_invoices pi
+                    JOIN purchase_invoice_lines pil ON pil.purchase_invoice_id  = pi.id
+                    WHERE invoice_date between '2025-08-01 00:00' AND '2025-08-31 23:59'
+                    ORDER BY pi.created_at DESC, id ASC
+                    LIMIT 100000 offset 0;
+                    
+                    CREATE UNIQUE INDEX purchase_invoices_pkey ON public.purchase_invoices USING btree (id);
+                    CREATE UNIQUE INDEX purchase_invoices_purchase_invoice_no_key ON public.purchase_invoices USING btree (purchase_invoice_no);
+                    CREATE UNIQUE INDEX purchase_invoice_lines_pkey ON public.purchase_invoice_lines USING btree (id);
+                    CREATE INDEX pi_pi_report_index1 ON public.purchase_invoices USING btree (created_at, invoice_date);
+                    CREATE INDEX pil_pi_report_index1 ON public.purchase_invoice_lines USING btree (component_name);
+                    CREATE INDEX idx_purchase_invoice_lines_invoice_id ON public.purchase_invoice_lines USING btree (purchase_invoice_id);`,
         },
         {
-            id: "binary-search",
-            name: "Algorithm 2: Binary Search",
+            id: "q2-keyset-pagination",
+            name: "Query 2: using Limit and Keyset Pagination",
             color: "#10b981",
-            code: `select * from purchase_invoices
-                   query #2`,
+            code: `store ID of the last query, and perform next query by using id as lower limit
+                    e.g (899986, 799986, 699986, 599986, 499986, 399986, 299986, 199986, 99986, 1)
+
+                    EXPLAIN ANALYZE select pi.*
+                    FROM purchase_invoices pi
+                    JOIN purchase_invoice_lines pil ON pil.purchase_invoice_id  = pi.id
+                    WHERE invoice_date between '2025-08-01 00:00' AND '2025-08-31 23:59'
+                    AND pi.id >= 299986
+                    ORDER BY pi.created_at DESC, id ASC
+                    LIMIT 100000;
+                    
+                    CREATE UNIQUE INDEX purchase_invoices_pkey ON public.purchase_invoices USING btree (id);
+                    CREATE UNIQUE INDEX purchase_invoices_purchase_invoice_no_key ON public.purchase_invoices USING btree (purchase_invoice_no);
+                    CREATE UNIQUE INDEX purchase_invoice_lines_pkey ON public.purchase_invoice_lines USING btree (id);
+                    CREATE INDEX pi_pi_report_index1 ON public.purchase_invoices USING btree (created_at, invoice_date);
+                    CREATE INDEX pil_pi_report_index1 ON public.purchase_invoice_lines USING btree (component_name);
+                    CREATE INDEX idx_purchase_invoice_lines_invoice_id ON public.purchase_invoice_lines USING btree (purchase_invoice_id);`,
         },
         {
-            id: "hash-table",
-            name: "Algorithm 3: Hash Table",
+            id: "q3-no-index",
+            name: "Query 3: no index",
             color: "#f59e0b",
-            code: `select * from purchase_invoices
-                   query #2`,
+            code: `same with query 1, but no index applied`,
         },
     ]
 
@@ -152,7 +169,7 @@ export default function ReportQueryAnalysis() {
                         <div className="flex items-center justify-between">
                             <div>
                                 <CardTitle>Performance Metrics</CardTitle>
-                                <CardDescription>Comparing query performance accross three different algorithms</CardDescription>
+                                <CardDescription>Comparing query performance across three queries, 1st & 2nd is using index, while 3rd query have no index</CardDescription>
                             </div>
                             <Badge className={getStatusColor()}>{getStatusText()}</Badge>
                         </div>
@@ -205,27 +222,28 @@ export default function ReportQueryAnalysis() {
                                         />
                                         <YAxis 
                                             label={{
-                                                value: "Query Time (ms)",
+                                                value: "Query Time (s)",
                                                 angle: -90,
                                                 position: "insideLeft",
                                                 style: { textAnchor: "middle" }
                                             }}
+                                            ticks={[0.5, 1, 1.5, 2, 20, 40, 50, 60, 80]}
                                         />
                                         <Tooltip 
                                             formatter={(value: number, name: string) => [
                                                 `${value}ms`,
-                                                name.replace("queryTime", "Algorithm ")
+                                                name.replace("queryTime", "Query ")
                                             ]}
                                             labelFormatter={(label: string) => `Data Count: ${label}`}
                                         />
-                                        <Legend formatter={(value: string) => value.replace("queryTime", "Algorithm ")} />
+                                        <Legend formatter={(value: string) => value.replace("queryTime", "Query ")} />
                                         <Line 
                                             type="monotone"
                                             dataKey="query_time1"
                                             stroke="#3b82f6"
                                             strokeWidth={3}
                                             dot={{ fill: "#3b82f6", strokeWidth: 2, r: 5 }}
-                                            name="Algorithm 1"
+                                            name="Query 1"
                                             activeDot={{ r: 7, fill: "#3b82f6"}}
                                         />
                                         <Line 
@@ -234,7 +252,7 @@ export default function ReportQueryAnalysis() {
                                             stroke="#10b981"
                                             strokeWidth={3}
                                             dot={{ fill: "#10b981", strokeWidth: 2, r: 5 }}
-                                            name="Algorithm 2"
+                                            name="Query 2"
                                             activeDot={{ r: 7, fill: "#10b981"}}
                                         />
                                         <Line 
@@ -243,7 +261,7 @@ export default function ReportQueryAnalysis() {
                                             stroke="#f59e0b"
                                             strokeWidth={3}
                                             dot={{ fill: "#f59e0b", strokeWidth: 2, r: 5 }}
-                                            name="Algorithm 3"
+                                            name="Query 3"
                                             activeDot={{ r: 7, fill: "#f59e0b"}}
                                         />
                                     </LineChart>
