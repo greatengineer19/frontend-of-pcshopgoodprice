@@ -1,4 +1,4 @@
-import type { SalesQuote, SalesQuoteParam } from "@/types/sales-quote"
+import type { SalesQuote, SalesQuoteParam, SalesQuoteSimple } from "@/types/sales-quote"
 import type { CartLine, PaymentMethod } from "@/types/cart"
 import { handleApiError } from "@/utils/api/error-handlers"
 import { useToastError } from "@/hooks/use-toast-error"
@@ -16,7 +16,7 @@ export const createSalesQuote = async (
     shippingAddress: string,
     paymentInfo: any,
     user: User
-): Promise<string> => {
+): Promise<SalesQuoteSimple> => {
     let token: string | null = null;
     // Todo: need to improve when secret key expired
     if (typeof window !== "undefined") {
@@ -53,7 +53,14 @@ export const createSalesQuote = async (
         throw new Error(errorText || "Failed to create sales quote");
     }
 
-    return 'ok'
+    const responseJson = await response.json();
+
+    const responseData: SalesQuoteSimple = {
+        id: responseJson.id,
+        sales_quote_no: responseJson.sales_quote_no
+    };
+
+    return responseData
 }
 
 export const destroySalesQuote = async (id: number): Promise<any> => {  

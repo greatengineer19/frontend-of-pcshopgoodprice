@@ -5,7 +5,11 @@ import { CreditCardCheckoutForm } from "@/components/credit-cards/CreditCardChec
 import { CheckoutSuccess } from "@/components/credit-cards/CheckoutSuccess"
 import { OrderSummary } from "@/components/credit-cards/OrderSummary"
 
-export function CheckoutPage() {
+interface CheckoutPageProps {
+    sales_quote_id: string | number
+}
+
+export function CheckoutPage({ sales_quote_id }: CheckoutPageProps) {
     const [isPaymentComplete, setIsPaymentComplete] = useState(false)
     const [paymentAmount] = useState(5000000.0)
 
@@ -28,7 +32,7 @@ export function CheckoutPage() {
 
                     <div className="grid lg:grid-cols-2 gap-8">
                         <div className="order-2 lg:order-1">
-                            <CreditCardCheckoutForm amount={paymentAmount} onPaymentSuccess={handlePaymentSuccess} />
+                            <CreditCardCheckoutForm sales_quote_id = {sales_quote_id} amount={paymentAmount} onPaymentSuccess={handlePaymentSuccess} />
                         </div>
 
                         <div className="order-1 lg:order-2">

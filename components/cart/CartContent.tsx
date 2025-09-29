@@ -16,6 +16,7 @@ import { fetchCart, removeFromCart, listPaymentMethods } from "@/lib/cart-servic
 import { createSalesQuote } from "@/lib/sales-quote-service"
 import type { CartLine, PaymentMethod } from "@/types/cart"
 import { useUser } from "@/hooks/use-user"
+import { SalesQuoteSimple } from "@/types/sales-quote"
 
 export default function CartPage() {
     const router = useRouter()
@@ -164,8 +165,8 @@ export default function CartPage() {
                     creditCardBankName: ''
                 };
 
-                await createSalesQuote(cartLines, address, paymentInfo, user);
-                router.push("/credit_card_checkout_form");
+                const salesQuote: SalesQuoteSimple = await createSalesQuote(cartLines, address, paymentInfo, user);
+                router.push("/credit_card_checkout_form?sales_quote_id=" + salesQuote.id);
             } else {
                 toast.error("Please select a valid payment method");
             }

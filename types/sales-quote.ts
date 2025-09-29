@@ -1,5 +1,14 @@
 import type { CartLine } from "./cart"
 
+export interface SalesQuoteSimpleParams {
+    id: number | string
+}
+
+export interface SalesQuoteSimple {
+    id: number,
+    sales_quote_no: string
+}
+
 export interface SalesQuoteParam {
     id: null,
     customer_id: number,

@@ -10,13 +10,16 @@ import { Label } from "@/components/ui/label"
 import { CardTypeIcon } from "@/components/credit-cards/CardTypeIcon"
 import { toast } from "sonner"
 import { validateCardNumber, validateExpiryDate, validateCVV, getCardType } from "@/lib/card-validation"
+import { SalesQuoteSimpleParams } from "@/types/sales-quote"
+import { createSalesInvoice } from "@/lib/sales-invoice-service"
 
 interface CheckoutFormProps {
+    sales_quote_id: string | number
     amount: number
     onPaymentSuccess: () => void
 }
 
-export function CreditCardCheckoutForm({ amount, onPaymentSuccess }: CheckoutFormProps) {
+export function CreditCardCheckoutForm({ sales_quote_id, amount, onPaymentSuccess }: CheckoutFormProps) {
     const [formData, setFormData] = useState({
         cardNumber: "",
         expiryDate: "",
@@ -28,6 +31,9 @@ export function CreditCardCheckoutForm({ amount, onPaymentSuccess }: CheckoutFor
     const [payLink, setPayLink] = useState("")
 
     const cardType = getCardType(formData.cardNumber)
+    const salesQuoteId: string | number = sales_quote_id
+    const [salesAmount, setSalesAmount] = useState(0)
+    const [salesQuoteNo, setSalesQuoteNo] = useState("")
 
     const handleInputChange = (field: string, value: string) => {
         let formattedValue = value
@@ -85,32 +91,36 @@ export function CreditCardCheckoutForm({ amount, onPaymentSuccess }: CheckoutFor
     }
 
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
+        e.preventDefault();
 
-        if (!validateForm()) return
+        if (!validateForm()) return;
 
-        setIsProcessing(true)
+        setIsProcessing(true);
 
-        setTimeout(() => {
-            setIsProcessing(false)
-            try {
-                onPaymentSuccess()
-            } catch (error) {
-                console.error("Failed during credit card payment:", error);
-                toast.error("Failed during credit card payment.");
-            }
-        }, 2000)
+        try {
+            await createSalesInvoice(Number(salesQuoteId), salesQuoteNo);
+            onPaymentSuccess();
+        } catch (error) {
+            console.error("Failed during credit card payment:", error);
+            toast.error("Failed during credit card payment.");
+        } finally {
+            setIsProcessing(false);
+        }
     }
 
     useEffect(() => {
         const fetchSession = async () => {
             try {
+                const payload: SalesQuoteSimpleParams = {
+                    id: Number(salesQuoteId)
+                };
                 const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/sales-payment/adyen/sessions-credit-card`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         "origin": "pcshopgoodprice.com"
-                    }
+                    },
+                    body: JSON.stringify(payload)
                 });
                 
                 if (!response.ok) {
@@ -118,6 +128,8 @@ export function CreditCardCheckoutForm({ amount, onPaymentSuccess }: CheckoutFor
                 }
                 
                 const data = await response.json();
+                setSalesAmount(data.amount.value)
+                setSalesQuoteNo(data.sales_quote_no)
                 console.log('Session data:', data);
             } catch (error) {
                 console.error("Failed to load sessions:", error);
@@ -197,7 +209,7 @@ export function CreditCardCheckoutForm({ amount, onPaymentSuccess }: CheckoutFor
                                 Processing...
                             </div>
                         ) : (
-                            `Pay Rp ${Number(amount).toLocaleString()}`
+                            `Pay Rp ${Number(salesAmount).toLocaleString()}`
                         )}
                     </Button>
 
