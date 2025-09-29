@@ -81,21 +81,21 @@ export default function CartPage() {
 
     const handleCheckout = async () => {
         if (!cartLines || cartLines.length === 0) {
-            toast.error("Your cart is empty")
-            return
+            toast.error("Your cart is empty");
+            return;
         }
 
         if (!address.trim()) {
-            toast.error("Please enter your shipping address")
-            return
+            toast.error("Please enter your shipping address");
+            return;
         }
 
         if (!user) {
-            toast.error("User is not present")
-            return
+            toast.error("Please log in to continue");
+            return;
         }
 
-        setIsProcessing(true)
+        setIsProcessing(true);
 
         try {
             const paymentInfo = {
@@ -106,23 +106,83 @@ export default function CartPage() {
                 creditCardCustomerName: '',
                 creditCardCustomerAddress: '',
                 creditCardBankName: ''
-            }
+            };
 
-            await createSalesQuote(cartLines, address, paymentInfo, user)
+            await createSalesQuote(cartLines, address, paymentInfo, user);
 
-            // Show success message
-            toast.success("Sales Quote placed successfully!")
-            router.push("/orders")
+            toast.success("Sales Quote placed successfully!");
+            router.push("/orders");
         } catch (error) {
-            const data = JSON.parse((error as Error).message);
-            const message = data.detail;
-
-            console.error("Failed to process order:", error)
-            toast.error(message)
+            console.error("Failed to process order:", error);
+            
+            let errorMessage = "Failed to process order. Please try again.";
+            
+            if (error instanceof Error) {
+                try {
+                    const data = JSON.parse(error.message);
+                    errorMessage = data.detail || errorMessage;
+                } catch {
+                    errorMessage = error.message || errorMessage;
+                }
+            }
+            
+            toast.error(errorMessage);
         } finally {
-            setIsProcessing(false)
+            setIsProcessing(false);
         }
-    }
+    };
+
+    const handlePayNow = async () => {
+        if (!cartLines || cartLines.length === 0) {
+            toast.error("Your cart is empty");
+            return;
+        }
+
+        if (!address.trim()) {
+            toast.error("Please enter your shipping address");
+            return;
+        }
+
+        if (!user) {
+            toast.error("Please log in to continue");
+            return;
+        }
+
+        setIsProcessing(true);
+
+        try {
+            if (selectedPaymentMethod?.name === "BBB Virtual Account") {
+                await handleCheckout();
+            } else if (selectedPaymentMethod?.name === "CreditCard (using adyen)") {
+                const paymentInfo = {
+                    paymentMethodId: selectedPaymentMethod?.id,
+                    paymentMethodName: selectedPaymentMethod?.name,
+                    virtualAccountNo: '',
+                    paylaterAccountReference: '',
+                    creditCardCustomerName: '',
+                    creditCardCustomerAddress: '',
+                    creditCardBankName: ''
+                };
+
+                await createSalesQuote(cartLines, address, paymentInfo, user);
+                router.push("/credit_card_checkout_form");
+            } else {
+                toast.error("Please select a valid payment method");
+            }
+        } catch (error) {
+            console.error("Failed to process payment:", error);
+            
+            let errorMessage = "Failed to process payment. Please try again.";
+            
+            if (error instanceof Error) {
+                errorMessage = error.message || errorMessage;
+            }
+            
+            toast.error(errorMessage);
+        } finally {
+            setIsProcessing(false);
+        }
+    };
 
     // Empty cart view
     if (!isLoading && (!cartLines || cartLines.length === 0)) {
@@ -276,7 +336,7 @@ export default function CartPage() {
                                                         <RadioGroupItem
                                                             value={method.name}
                                                             id={String(method.id)}
-                                                            disabled={method.name !== "Virtual Account"}
+                                                            disabled={(method.name !== "BBB Virtual Account") && (method.name !== "CreditCard (using adyen)")}
                                                         />
                                                         <Label
                                                             htmlFor={String(method.id)}
@@ -301,7 +361,7 @@ export default function CartPage() {
                                         <Button 
                                             className="w-full"
                                             size="lg"
-                                            onClick={handleCheckout}
+                                            onClick={handlePayNow}
                                             disabled={isProcessing || !cartLines || cartLines.length === 0 }
                                         >
                                             {
