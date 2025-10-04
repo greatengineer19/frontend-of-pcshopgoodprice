@@ -2,6 +2,7 @@
 
 import type React from "react"
 
+import { useRouter } from "next/navigation"
 import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -26,6 +27,7 @@ export function CreditCardCheckoutForm({ sales_quote_id, amount, onPaymentSucces
         cvv: "",
         nameOnCard: ""
     })
+    const router = useRouter()
     const [errors, setErrors] = useState<Record<string, string>>({})
     const [isProcessing, setIsProcessing] = useState(false)
     const [payLink, setPayLink] = useState("")
@@ -68,7 +70,7 @@ export function CreditCardCheckoutForm({ sales_quote_id, amount, onPaymentSucces
     }
 
     const validateForm = () => {
-        const newErrors: Record<string, string>= {}
+        const newErrors: Record<string, string> = {}
 
         if (!validateCardNumber(formData.cardNumber.replace(/\s/g, ""))) {
             newErrors.cardNumber = "Please enter a valid card number"
@@ -126,19 +128,29 @@ export function CreditCardCheckoutForm({ sales_quote_id, amount, onPaymentSucces
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
+
+                // Check if the response URL is external or internal
+                const redirectUrl = response.url;
+                console.log('Redirect URL:', redirectUrl);
+
+                // If it's an external URL, use window.location
+                if (redirectUrl.startsWith('http://') || redirectUrl.startsWith('https://')) {
+                    window.location.href = redirectUrl;
+                } else {
+                    // If it's a relative URL, use router.push
+                    router.push(redirectUrl);
+                }
                 
-                const data = await response.json();
-                setSalesAmount(data.amount.value)
-                setSalesQuoteNo(data.sales_quote_no)
-                console.log('Session data:', data);
             } catch (error) {
                 console.error("Failed to load sessions:", error);
                 toast.error("Failed to load sessions.");
             }
         };
 
-        fetchSession(); // Actually call the function
-    }, []);
+        if (salesQuoteId) {
+            fetchSession();
+        }
+    }, [salesQuoteId, router]); // Added dependencies
 
     return (
         <Card className="w-full">
@@ -151,11 +163,11 @@ export function CreditCardCheckoutForm({ sales_quote_id, amount, onPaymentSucces
                         <Label htmlFor="cardNumber">Card Number</Label>
                         <div className="relative">
                             <Input 
-                                id="cardnumber"
+                                id="cardNumber" // Fixed: was "cardnumber"
                                 placeholder="1234 5678 9012 3456"
                                 value={formData.cardNumber}
                                 onChange={(e) => handleInputChange("cardNumber", e.target.value)}
-                                className={`pr-12 ${errors.cardnumber ? "border-destructive" : "" }`}
+                                className={`pr-12 ${errors.cardNumber ? "border-destructive" : "" }`} // Fixed: was "errors.cardnumber"
                             />
                             <div className="absolute right-3 top-1/2 -translate-y-1/2">
                                 <CardTypeIcon type={cardType} />
@@ -164,7 +176,7 @@ export function CreditCardCheckoutForm({ sales_quote_id, amount, onPaymentSucces
                         {errors.cardNumber && <p className="text-sm text-destructive">{errors.cardNumber}</p>}
                     </div>
 
-                    <div className="grid gird-cols-2 gap-4">
+                    <div className="grid grid-cols-2 gap-4"> {/* Fixed: was "gird-cols-2" */}
                         <div className="space-y-2">
                             <Label htmlFor="expiryDate">Expiry Date</Label>
                             <Input 
@@ -209,7 +221,7 @@ export function CreditCardCheckoutForm({ sales_quote_id, amount, onPaymentSucces
                                 Processing...
                             </div>
                         ) : (
-                            `Pay Rp ${Number(salesAmount).toLocaleString()}`
+                            `Pay Rp ${Number(amount || salesAmount).toLocaleString()}` // Use prop amount as fallback
                         )}
                     </Button>
 
