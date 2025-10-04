@@ -73,13 +73,18 @@ export const voidSalesInvoice = async (id: number): Promise<any> => {
 }
 
 // Fetch Orders
-export const fetchSalesInvoices = async (): Promise<SalesInvoice[]> => {
+export const fetchSalesInvoices = async (startDate?: string): Promise<SalesInvoice[]> => {
     let token: string | null = null;
     if (typeof window !== "undefined") {
         token = localStorage.getItem(SECRET_KEY_NAME);
     }
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/sales-invoices`, {
+    const query_params = {
+        start_date: startDate || ''
+    }
+
+    const queryString = '?' + new URLSearchParams(query_params).toString();
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/sales-invoices${queryString}`, {
         headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${token}`,

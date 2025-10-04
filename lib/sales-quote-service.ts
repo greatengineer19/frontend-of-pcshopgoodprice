@@ -94,13 +94,18 @@ export const destroySalesQuote = async (id: number): Promise<any> => {
 }
 
 // Fetch Orders
-export const fetchSalesQuotes = async (): Promise<SalesQuote[]> => {
+export const fetchSalesQuotes = async (startDate?: string): Promise<SalesQuote[]> => {
     let token: string | null = null;
     if (typeof window !== "undefined") {
         token = localStorage.getItem(SECRET_KEY_NAME);
     }
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/sales-quotes`, {
+    const query_params = {
+        start_date: startDate || ''
+    }
+
+    const queryString = '?' + new URLSearchParams(query_params).toString();
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/sales-quotes${queryString}`, {
         headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${token}`,

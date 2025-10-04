@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import Link from "next/link"
 import { FileText } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -25,6 +25,25 @@ export default function OrdersContent() {
     const [expandedResourceType, setExpandedResourceType] = useState<string | null>(null)
     const [isAccepting, setIsAccepting] = useState<string | null>(null)
     const [isCancelling, setIsCancelling] = useState<string | null>(null)
+    const [range, setRange] = useState<"today" | "week" | "all">("week");
+    const startDate = useMemo(() => {
+        const now = new Date();
+            switch(range) {
+                    case "today":
+                    return now.toISOString().split('T')[0]; // YYYY-MM-DD format
+                case "week":
+                    const weekAgo = new Date(now);
+                    weekAgo.setDate(now.getDate() - 7);
+                    return weekAgo.toISOString().split('T')[0];
+                case "all":
+                    return "2000-01-01";
+                default:
+                    const defaultWeekAgo = new Date(now);
+                    defaultWeekAgo.setDate(now.getDate() - 7);
+                    return defaultWeekAgo.toISOString().split('T')[0];
+            }
+        }, [range]
+    );
 
     // Load Sales Quotes
     useEffect(() => {
@@ -32,7 +51,7 @@ export default function OrdersContent() {
             setIsLoading(true)
 
             try {
-                const [salesQuotesData, salesInvoicesData, salesDeliveriesData ]= await Promise.all([fetchSalesQuotes(), fetchSalesInvoices(), fetchSalesDeliveries()]);
+                const [salesQuotesData, salesInvoicesData, salesDeliveriesData ]= await Promise.all([fetchSalesQuotes(startDate), fetchSalesInvoices(startDate), fetchSalesDeliveries(startDate)]);
 
                 setSalesQuotes(salesQuotesData)
                 setSalesDeliveries(salesDeliveriesData)
@@ -46,7 +65,7 @@ export default function OrdersContent() {
         }
 
         loadAllData()
-    }, [])
+    }, [startDate])
 
     // Load shipping updates when an order is expanded
     const handleToggleExpand = (orderId: number, resourceType: string) => {
@@ -81,44 +100,70 @@ export default function OrdersContent() {
 
     return (
         <div className="container mx-auto px-4 py-8">
-            <h1 className="text-3xl font-bold mb-8">Your Orders</h1>
+        <div className="mb-8 flex items-center justify-between">
+            <h1 className="text-3xl font-bold">Your Orders</h1>
+            <div className="inline-flex rounded-md border p-1" role="group" aria-label="Filter orders by time range">
+            <Button
+                variant={range === "today" ? "default" : "outline"}
+                size="sm"
+                onClick={() => setRange("today")}
+                aria-pressed={range === "today"}
+            >
+                Today
+            </Button>
+            <Button
+                variant={range === "week" ? "default" : "outline"}
+                size="sm"
+                onClick={() => setRange("week")}
+                aria-pressed={range === "week"}
+            >
+                Week ago
+            </Button>
+            <Button
+                variant={range === "all" ? "default" : "outline"}
+                size="sm"
+                onClick={() => setRange("all")}
+                aria-pressed={range === "all"}
+            >
+                All
+            </Button>
+            </div>
+        </div>
 
-            {
-                isLoading ? (
-                    <div className="flex justify-center items-center h-64">
-                        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
-                    </div>
-                ) : (
-                    <div className="space-y-6">
-                        <SalesQuotesContent 
-                            salesQuotes={salesQuotes}
-                            expandedOrderId={expandedOrderId}
-                            expandedResourceType={expandedResourceType}
-                            handleToggleExpand={handleToggleExpand}
-                            isAccepting={isAccepting}
-                            setIsAccepting={setIsAccepting}
-                            isCancelling={isCancelling}
-                            setIsCancelling={setIsCancelling}
-                        />
-                        <SalesDeliveriesContent 
-                            salesDeliveries={salesDeliveries}
-                            expandedOrderId={expandedOrderId}
-                            expandedResourceType={expandedResourceType}
-                            handleToggleExpand={handleToggleExpand}
-                            isAccepting={isAccepting}
-                            setIsAccepting={setIsAccepting}
-                            isCancelling={isCancelling}
-                            setIsCancelling={setIsCancelling}
-                        />
-                        <SalesInvoicesContent 
-                            salesInvoices={salesInvoices}
-                            expandedOrderId={expandedOrderId}
-                            expandedResourceType={expandedResourceType}
-                            handleToggleExpand={handleToggleExpand}
-                        />
-                    </div>
-                )
-            }
+        {isLoading ? (
+            <div className="flex justify-center items-center h-64">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+            </div>
+        ) : (
+            <div className="space-y-6">
+                <SalesQuotesContent
+                    salesQuotes={salesQuotes}
+                    expandedOrderId={expandedOrderId}
+                    expandedResourceType={expandedResourceType}
+                    handleToggleExpand={handleToggleExpand}
+                    isAccepting={isAccepting}
+                    setIsAccepting={setIsAccepting}
+                    isCancelling={isCancelling}
+                    setIsCancelling={setIsCancelling}
+                />
+                <SalesDeliveriesContent
+                    salesDeliveries={salesDeliveries}
+                    expandedOrderId={expandedOrderId}
+                    expandedResourceType={expandedResourceType}
+                    handleToggleExpand={handleToggleExpand}
+                    isAccepting={isAccepting}
+                    setIsAccepting={setIsAccepting}
+                    isCancelling={isCancelling}
+                    setIsCancelling={setIsCancelling}
+                />
+                <SalesInvoicesContent
+                    salesInvoices={salesInvoices}
+                    expandedOrderId={expandedOrderId}
+                    expandedResourceType={expandedResourceType}
+                    handleToggleExpand={handleToggleExpand}
+                />
+            </div>
+        )}
         </div>
     )
 }
