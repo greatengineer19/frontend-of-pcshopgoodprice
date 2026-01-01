@@ -6,7 +6,7 @@ import Link from "next/link"
 import { ChevronDown, ChevronRight, Globe, SwitchCamera, ShoppingBasket, FileText } from "lucide-react"
 // import { userContext } from "@/context/user-context"
 import { fetchUser, fetchUserDefault } from "@/lib/user-service"
-import { fetchCart} from "@/lib/cart-service"
+import { fetchCart } from "@/lib/cart-service"
 import {
     NavigationMenu,
     NavigationMenuContent,
@@ -68,7 +68,7 @@ export function Navbar() {
         } else {
             response = await fetchUserDefault();
         }
-        
+
         const responseUser = response.user;
 
         localStorage.setItem(SECRET_KEY_NAME, response.access_token);
@@ -84,6 +84,7 @@ export function Navbar() {
             redirect('/computer_components')
         }
     }
+
     const toggleRole = async () => {
         let requestRole = role === "seller" ? "buyer" : "seller"
         let token = localStorage.getItem(SECRET_KEY_NAME);
@@ -94,7 +95,7 @@ export function Navbar() {
         } else {
             response = await fetchUserDefault();
         }
-        
+
         const responseUser = response.user;
 
         localStorage.setItem(SECRET_KEY_NAME, response.access_token);
@@ -113,37 +114,37 @@ export function Navbar() {
     const windowSize = useWindowSize()
     const menuItemsSeller = [
         {
-        title: "Computer Components",
-        items: [
-            { name: "Computer Components", href: "/computer_components", description: "View and manage components" }
-        ],
+            title: "Computer Components",
+            items: [
+                { name: "Computer Components", href: "/computer_components", description: "View and manage components" }
+            ],
         },
         {
-        title: "Procurement",
-        items: [
-            { name: "Purchase Invoice", href: "/purchase_invoices", description: "Manage purchase invoices" },
-            { name: "Inbound Delivery", href: "/inbound_deliveries", description: "Manage inbound deliveries" },
-        ],
+            title: "Procurement",
+            items: [
+                { name: "Purchase Invoice", href: "/purchase_invoices", description: "Manage purchase invoices" },
+                { name: "Inbound Delivery", href: "/inbound_deliveries", description: "Manage inbound deliveries" },
+            ],
         },
         {
-        title: "Report",
-        items: [
-            {
-                name: "Report Purchase Invoice",
-                href: "/report/purchase_invoices",
-                description: "View purchase invoice reports",
-            },
-            {
-                name: "Report Inventory Movement",
-                href: "/report/inventories",
-                description: "View inventory movement reports",
-            },
-            {
-                name: "Query Performance Analysis",
-                href: "/report/query_analysis",
-                description: "Analyze performance of 3 purchase invoices query",
-            },
-        ],
+            title: "Report",
+            items: [
+                {
+                    name: "Report Purchase Invoice",
+                    href: "/report/purchase_invoices",
+                    description: "View purchase invoice reports",
+                },
+                {
+                    name: "Report Inventory Movement",
+                    href: "/report/inventories",
+                    description: "View inventory movement reports",
+                },
+                {
+                    name: "Query Performance Analysis",
+                    href: "/report/query_analysis",
+                    description: "Analyze performance of 3 purchase invoices query",
+                },
+            ],
         },
     ]
 
@@ -159,7 +160,7 @@ export function Navbar() {
     ]
 
     const menuItems = role === "seller" ? menuItemsSeller : menuItemsBuyer
-    
+
     if (pathname === '/' && windowSize.typeId == 0) {
         return (
             <div className="border-b">
@@ -178,8 +179,8 @@ export function Navbar() {
                 <div className="flex items-center justify-between p-1 border-b bg-background">
                     <div className="relative h-24 w-24">
                         <Image
-                            src={ "/psgp_logo_with_wording.png" }
-                            alt={ "Login page" }
+                            src={"/psgp_logo_with_wording.png"}
+                            alt={"Login page"}
                             fill
                         />
                     </div>
@@ -192,16 +193,16 @@ export function Navbar() {
                 <div className="flex items-center justify-between p-1 border-b bg-background">
                     <div className="relative h-24 w-24">
                         <Image
-                            src={ "/psgp_logo_with_wording.png" }
-                            alt={ "Login page" }
+                            src={"/psgp_logo_with_wording.png"}
+                            alt={"Login page"}
                             fill
                         />
                     </div>
                     <Button variant="ghost" size="sm" onClick={() => setIsOpen(!isOpen)} className="md:hidden">
-                        { isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" /> }
+                        {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
                     </Button>
                 </div>
-                
+
                 {
                     isOpen && (
                         <Card className="border-x-0 border-t-0 rounded-none p-0">
@@ -210,10 +211,10 @@ export function Navbar() {
                                     <div className="flex items-center space-x-2">
                                         <span className="text-sm font-medium text-muted-foreground">Switch to:</span>
                                         <div className="flex rounded-md border">
-                                            <Button 
+                                            <Button
                                                 variant={role === "buyer" ? "default" : "ghost"}
                                                 size="sm"
-                                                onClick={() => toggleManualRole("buyer") }
+                                                onClick={() => toggleManualRole("buyer")}
                                                 className="rounded-r-none"
                                             >
                                                 Buyer
@@ -251,19 +252,19 @@ export function Navbar() {
                                                     </Button>
                                                 </CollapsibleTrigger>
                                                 <CollapsibleContent>
-                                                        <div className="bg-muted/30">
-                                                            {section.items.map((item) => (
-                                                                <Link
-                                                                    key={item.href}
-                                                                    href={item.href}
-                                                                    className="block p-4 pl-8 hover:bg-accent hover:text-accent-foreground transition-colors"
-                                                                    onClick={() => setIsOpen(false)}
-                                                                >
-                                                                    <div className="font-medium text-sm">{item.name}</div>
-                                                                    <p className="text-xs text-muted-foreground mt-1">{item.description}</p>
-                                                                </Link>
-                                                            ))}
-                                                        </div>
+                                                    <div className="bg-muted/30">
+                                                        {section.items.map((item) => (
+                                                            <Link
+                                                                key={item.href}
+                                                                href={item.href}
+                                                                className="block p-4 pl-8 hover:bg-accent hover:text-accent-foreground transition-colors"
+                                                                onClick={() => setIsOpen(false)}
+                                                            >
+                                                                <div className="font-medium text-sm">{item.name}</div>
+                                                                <p className="text-xs text-muted-foreground mt-1">{item.description}</p>
+                                                            </Link>
+                                                        ))}
+                                                    </div>
                                                 </CollapsibleContent>
                                             </Collapsible>
                                         ))
@@ -295,181 +296,181 @@ export function Navbar() {
                     <div className="container mx-auto flex h-16 items-center justify-between px-4">
                         {/* Logo */}
                         <Link href="/computer_components" className="flex items-center">
-                        <span className="text-xl font-normal font-serif">PCSHOP GOOD PRICE</span>
+                            <span className="text-xl font-normal font-serif">PCSHOP GOOD PRICE</span>
                         </Link>
 
                         {/* Navigation - Different based on role */}
                         {role === "seller" ? (
-                        <NavigationMenu>
-                            <NavigationMenuList>
-                            {/* Computer Components */}
-                            <NavigationMenuItem>
-                                <NavigationMenuTrigger className="h-10">Computer Components</NavigationMenuTrigger>
-                                <NavigationMenuContent>
-                                <ul className="grid w-[300px] gap-3 p-4">
-                                    <li>
-                                    <NavigationMenuLink asChild>
-                                        <Link
-                                        href="/computer_components"
-                                        className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                                        >
-                                        <div className="text-sm font-medium">Computer Components</div>
-                                        <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                                            View and manage components
-                                        </p>
-                                        </Link>
-                                    </NavigationMenuLink>
-                                    </li>
-                                </ul>
-                                </NavigationMenuContent>
-                            </NavigationMenuItem>
+                            <NavigationMenu>
+                                <NavigationMenuList>
+                                    {/* Computer Components */}
+                                    <NavigationMenuItem>
+                                        <NavigationMenuTrigger className="h-10">Computer Components</NavigationMenuTrigger>
+                                        <NavigationMenuContent>
+                                            <ul className="grid w-[300px] gap-3 p-4">
+                                                <li>
+                                                    <NavigationMenuLink asChild>
+                                                        <Link
+                                                            href="/computer_components"
+                                                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                                                        >
+                                                            <div className="text-sm font-medium">Computer Components</div>
+                                                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                                                                View and manage components
+                                                            </p>
+                                                        </Link>
+                                                    </NavigationMenuLink>
+                                                </li>
+                                            </ul>
+                                        </NavigationMenuContent>
+                                    </NavigationMenuItem>
 
-                            {/* Procurement */}
-                            <NavigationMenuItem>
-                                <NavigationMenuTrigger className="h-10">Procurement</NavigationMenuTrigger>
-                                <NavigationMenuContent>
-                                <ul className="grid w-[300px] gap-3 p-4">
-                                    <li>
-                                    <NavigationMenuLink asChild>
-                                        <Link
-                                        href="/purchase_invoices"
-                                        className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                                        >
-                                        <div className="text-sm font-medium">Purchase Invoice</div>
-                                        <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                                            Manage purchase invoices
-                                        </p>
-                                        </Link>
-                                    </NavigationMenuLink>
-                                    </li>
-                                    <li>
-                                    <NavigationMenuLink asChild>
-                                        <Link
-                                        href="/inbound_deliveries"
-                                        className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                                        >
-                                        <div className="text-sm font-medium">Inbound Delivery</div>
-                                        <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                                            Manage inbound deliveries
-                                        </p>
-                                        </Link>
-                                    </NavigationMenuLink>
-                                    </li>
-                                </ul>
-                                </NavigationMenuContent>
-                            </NavigationMenuItem>
+                                    {/* Procurement */}
+                                    <NavigationMenuItem>
+                                        <NavigationMenuTrigger className="h-10">Procurement</NavigationMenuTrigger>
+                                        <NavigationMenuContent>
+                                            <ul className="grid w-[300px] gap-3 p-4">
+                                                <li>
+                                                    <NavigationMenuLink asChild>
+                                                        <Link
+                                                            href="/purchase_invoices"
+                                                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                                                        >
+                                                            <div className="text-sm font-medium">Purchase Invoice</div>
+                                                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                                                                Manage purchase invoices
+                                                            </p>
+                                                        </Link>
+                                                    </NavigationMenuLink>
+                                                </li>
+                                                <li>
+                                                    <NavigationMenuLink asChild>
+                                                        <Link
+                                                            href="/inbound_deliveries"
+                                                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                                                        >
+                                                            <div className="text-sm font-medium">Inbound Delivery</div>
+                                                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                                                                Manage inbound deliveries
+                                                            </p>
+                                                        </Link>
+                                                    </NavigationMenuLink>
+                                                </li>
+                                            </ul>
+                                        </NavigationMenuContent>
+                                    </NavigationMenuItem>
 
-                            {/* Reports */}
-                            <NavigationMenuItem>
-                                <NavigationMenuTrigger className="h-10">Reports</NavigationMenuTrigger>
-                                <NavigationMenuContent>
-                                <ul className="grid w-[320px] gap-3 p-4">
-                                    <li>
-                                    <NavigationMenuLink asChild>
-                                        <Link
-                                        href="/report/purchase_invoices"
-                                        className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                                        >
-                                        <div className="text-sm font-medium">Report Purchase Invoice</div>
-                                        <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                                            View purchase invoice reports
-                                        </p>
-                                        </Link>
-                                    </NavigationMenuLink>
-                                    </li>
-                                    <li>
-                                        <NavigationMenuLink asChild>
-                                            <Link
-                                            href="/report/inventories"
-                                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                                            >
-                                            <div className="text-sm font-medium">Report Inventory Movement</div>
-                                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                                                View inventory movement reports
-                                            </p>
-                                            </Link>
-                                        </NavigationMenuLink>
-                                    </li>
-                                    <li>
-                                        <NavigationMenuLink asChild>
-                                            <Link
-                                            href="/report/query_analysis"
-                                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                                            >
-                                            <div className="text-sm font-medium">Query Performance Analysis</div>
-                                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                                                Analyze performance of 3 purchase invoices query
-                                            </p>
-                                            </Link>
-                                        </NavigationMenuLink>
-                                    </li>
-                                </ul>
-                                </NavigationMenuContent>
-                            </NavigationMenuItem>
-                            </NavigationMenuList>
-                        </NavigationMenu>
+                                    {/* Reports */}
+                                    <NavigationMenuItem>
+                                        <NavigationMenuTrigger className="h-10">Reports</NavigationMenuTrigger>
+                                        <NavigationMenuContent>
+                                            <ul className="grid w-[320px] gap-3 p-4">
+                                                <li>
+                                                    <NavigationMenuLink asChild>
+                                                        <Link
+                                                            href="/report/purchase_invoices"
+                                                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                                                        >
+                                                            <div className="text-sm font-medium">Report Purchase Invoice</div>
+                                                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                                                                View purchase invoice reports
+                                                            </p>
+                                                        </Link>
+                                                    </NavigationMenuLink>
+                                                </li>
+                                                <li>
+                                                    <NavigationMenuLink asChild>
+                                                        <Link
+                                                            href="/report/inventories"
+                                                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                                                        >
+                                                            <div className="text-sm font-medium">Report Inventory Movement</div>
+                                                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                                                                View inventory movement reports
+                                                            </p>
+                                                        </Link>
+                                                    </NavigationMenuLink>
+                                                </li>
+                                                <li>
+                                                    <NavigationMenuLink asChild>
+                                                        <Link
+                                                            href="/report/query_analysis"
+                                                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                                                        >
+                                                            <div className="text-sm font-medium">Query Performance Analysis</div>
+                                                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                                                                Analyze performance of 3 purchase invoices query
+                                                            </p>
+                                                        </Link>
+                                                    </NavigationMenuLink>
+                                                </li>
+                                            </ul>
+                                        </NavigationMenuContent>
+                                    </NavigationMenuItem>
+                                </NavigationMenuList>
+                            </NavigationMenu>
                         ) : (
-                        <NavigationMenu>
-                            <NavigationMenuList>
-                            <NavigationMenuItem>
-                                <NavigationMenuLink asChild>
-                                <Link
-                                    href="/shop"
-                                    className="flex h-10 w-full items-center justify-between px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                                >
-                                    Shop Products
-                                </Link>
-                                </NavigationMenuLink>
-                            </NavigationMenuItem>
-                            </NavigationMenuList>
-                        </NavigationMenu>
+                            <NavigationMenu>
+                                <NavigationMenuList>
+                                    <NavigationMenuItem>
+                                        <NavigationMenuLink asChild>
+                                            <Link
+                                                href="/shop"
+                                                className="flex h-10 w-full items-center justify-between px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                                            >
+                                                Shop Products
+                                            </Link>
+                                        </NavigationMenuLink>
+                                    </NavigationMenuItem>
+                                </NavigationMenuList>
+                            </NavigationMenu>
                         )}
 
                         {/* Right side items */}
                         <div className="flex items-center space-x-4">
-                        {/* Language Selector */}
-                        <div className="relative">
+                            {/* Language Selector */}
+                            <div className="relative">
+                                <button
+                                    className="flex items-center space-x-1 text-sm hover:bg-accent hover:text-accent-foreground rounded-md px-2 py-1 transition-colors"
+                                    onClick={() => setLanguage(language === "English" ? "Indonesia" : "English")}
+                                >
+                                    <Globe className="h-4 w-4" />
+                                    <span>{language}</span>
+                                    <ChevronDown className="h-3 w-3" />
+                                </button>
+                            </div>
+
+                            {/* Role Switch */}
                             <button
-                            className="flex items-center space-x-1 text-sm hover:bg-accent hover:text-accent-foreground rounded-md px-2 py-1 transition-colors"
-                            onClick={() => setLanguage(language === "English" ? "Indonesia" : "English")}
+                                onClick={toggleRole}
+                                className="text-sm hover:underline cursor-pointer hover:bg-accent hover:text-accent-foreground rounded-md px-2 py-1 transition-colors"
                             >
-                            <Globe className="h-4 w-4" />
-                            <span>{language}</span>
-                            <ChevronDown className="h-3 w-3" />
+                                Switch to {role === "buyer" ? "Seller" : "Buyer"}
                             </button>
-                        </div>
 
-                        {/* Role Switch */}
-                        <button
-                            onClick={toggleRole}
-                            className="text-sm hover:underline cursor-pointer hover:bg-accent hover:text-accent-foreground rounded-md px-2 py-1 transition-colors"
-                        >
-                            Switch to {role === "buyer" ? "Seller" : "Buyer"}
-                        </button>
+                            {/* Buyer-specific icons */}
+                            {role === "buyer" && (
+                                <>
+                                    {/* Shopping Basket */}
+                                    <Link href="/cart">
+                                        <Button variant="ghost" size="icon" className="relative">
+                                            <ShoppingBasket className="h-5 w-5" />
+                                            {cartItemCount > 0 && (
+                                                <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] text-white">
+                                                    {cartItemCount}
+                                                </span>
+                                            )}
+                                        </Button>
+                                    </Link>
 
-                        {/* Buyer-specific icons */}
-                        {role === "buyer" && (
-                            <>
-                            {/* Shopping Basket */}
-                            <Link href="/cart">
-                                <Button variant="ghost" size="icon" className="relative">
-                                <ShoppingBasket className="h-5 w-5" />
-                                {cartItemCount > 0 && (
-                                    <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] text-white">
-                                    {cartItemCount}
-                                    </span>
-                                )}
-                                </Button>
-                            </Link>
-
-                            {/* Orders/Invoices */}
-                            <Link href="/orders">
-                                <Button variant="ghost" size="icon">
-                                <FileText className="h-5 w-5" />
-                                </Button>
-                            </Link>
-                            </>
-                        )}
+                                    {/* Orders/Invoices */}
+                                    <Link href="/orders">
+                                        <Button variant="ghost" size="icon">
+                                            <FileText className="h-5 w-5" />
+                                        </Button>
+                                    </Link>
+                                </>
+                            )}
                         </div>
                     </div>
                 </div>

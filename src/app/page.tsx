@@ -1,21 +1,37 @@
 'use client';
 
+import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import Link from "next/link";
 import { fetchUserSuperBuyer, fetchUserDefault } from "@/lib/user-service"
 import type { GetUserResponseAPI, UserRole } from "@/types/user"
 import { useUser } from "@/hooks/use-user"
-import { redirect } from 'next/navigation'
-import { useWindowSize } from "@/lib/window-size";
+
+const features = [
+  { id: 1, name: "Buyer's Shopping Page", href: "/shop", role: "buyer" },
+  { id: 2, name: "Purchase Report and Chat with GPT-4o mini", href: "/report/purchase_invoices", role: "seller" },
+  { id: 3, name: "Graph Query Performance Analysis", href: "/report/query_analysis", role: "seller" },
+  { id: 4, name: "Items Checkout Payment Integrated with Adyen", href: "/cart", role: "buyer" },
+  { id: 5, name: "Seller's Inbound Delivery Page", href: "/inbound_deliveries", role: "seller" },
+]
 
 export default function Home() {
   const SECRET_KEY_NAME = 'secret_key';
   const REFRESH_KEY_NAME = 'refresh_key';
 
   const { setRole, setUser } = useUser()
-  
-  const loginAsBuyer = async () => {
-      const response: GetUserResponseAPI  = await fetchUserSuperBuyer();
+
+  const handleFeatureClick = async (e: React.MouseEvent, feature: typeof features[0]) => {
+    e.preventDefault();
+
+    try {
+      let response: GetUserResponseAPI;
+
+      if (feature.role === "buyer") {
+        response = await fetchUserSuperBuyer();
+      } else {
+        response = await fetchUserDefault();
+      }
+
       const responseUser = response.user;
 
       localStorage.setItem(SECRET_KEY_NAME, response.access_token);
@@ -25,77 +41,73 @@ export default function Home() {
       setUser(responseUser)
       setRole(userRole)
 
-      window.location.href = '/shop';
-  }
-
-  const loginAsSeller = async () => {
-      const response: GetUserResponseAPI  = await fetchUserDefault();
-      const responseUser = response.user;
-
-      localStorage.setItem(SECRET_KEY_NAME, response.access_token);
-      localStorage.setItem(REFRESH_KEY_NAME, response.refresh_token);
-
-      const userRole: UserRole = responseUser.role.toLowerCase() as UserRole;
-      setUser(responseUser)
-      setRole(userRole)
-
-      window.location.href = '/computer_components';
+      window.location.href = feature.href;
+    } catch (error) {
+      console.error('Login failed:', error);
+    }
   }
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden">
-      {/* Desktop Background */}
-      <div className="absolute inset-0 hidden md:block">
-        <Image
-          src="/seacliffbridge.jpeg?height=1080&width=1920"
-          alt="Desktop background"
-          fill
-          className="object-cover"
-          priority
-        />
-        <div className="absolute inset-0 bg-black/40" />
-      </div>
+    <main className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
+      <header className="mb-16 text-center">
+        <h1 className="text-3xl md:text-4xl font-bold text-foreground text-pretty">
+          Welcome to Pisgop! Choose a feature you'd like to explore.
+        </h1>
+      </header>
 
-      {/* Mobile Background */}
-      <div className="absolute inset-0 block md:hidden">
-        <Image
-          src="/seacliffbridge.jpeg?height=800&width=400"
-          alt="Mobile background"
-          fill
-          className="object-cover"
-          priority
-        />
-        <div className="absolute inset-0 bg-black/50" />
-      </div>
+      <div className="w-full max-w-7xl">
+        {/* Desktop: Grid layout with 5 columns (squares) */}
+        <div className="hidden md:grid grid-cols-5 gap-4 relative">
+          {
+            features.map((feature) => (
+              <a
+                key={feature.id}
+                href={feature.href}
+                onClick={(e) => handleFeatureClick(e, feature)}
+                className="h-full"
+              >
+                <Button
+                  className="w-full h-40 text-lg font-semibold hover:scale-105 transition-transform duration-200 whitespace-normal break-words px-2 py-2 text-center leading-tight"
+                  variant="default"
+                >
+                  {feature.name}
+                </Button>
+              </a>
+            ))
+          }
+        </div>
 
-      {/* Content */}
-      <div className="relative z-10 flex min-h-screen items-center justify-center px-4">
-        <div className="w-full max-w-md space-y-8 text-center -mt-32">
-          {/* Logo/Title */}
-          <div className="space-y-4">
-            <h1 className="text-4xl font-bold text-white md:text-5xl lg:text-6xl">Welcome</h1>
-            <p className="text-lg text-white/90 md:text-xl">We have AI assistant ready, choose Seller mode and view Report</p>
-            <p className="text-lg text-white/90 md:text-xl">Choose your login type</p>
+        {/* Mobile: Stack layout with full width (rectangles) */}
+        <div className="md:hidden flex flex-col gap-4 relative">
+          <div className="absolute inset-0 -z-10">
+            <Image
+              src="/bg_stuffs.png?height=1080&width=1920"
+              alt="Mobile background"
+              fill
+              className="object-cover"
+              priority
+            />
+            <div className="absolute inset-0 bg-black/40" />
           </div>
-
-          {/* Login Buttons */}
-          <div className="space-y-4">
-            <button
-              onClick={loginAsBuyer}
-              className="block w-full rounded-lg bg-blue-600 px-8 py-4 text-lg font-semibold text-white shadow-lg transition-all duration-200 hover:bg-blue-700 hover:shadow-xl hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-500/50"
-            >
-              Login as Buyer
-            </button>
-
-            <button
-              onClick={loginAsSeller}
-              className="block w-full rounded-lg bg-blue-600 px-8 py-4 text-lg font-semibold text-white shadow-lg transition-all duration-200 hover:bg-blue-700 hover:shadow-xl hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-500/50"
-            >
-              Login as Seller
-            </button>
-          </div>
+          {
+            features.map((feature) => (
+              <a
+                key={feature.id}
+                href={feature.href}
+                onClick={(e) => handleFeatureClick(e, feature)}
+                className="w-full"
+              >
+                <Button
+                  className="w-full h-16 text-base font-semibold hover:scale-105 transition-transform duration-200 whitespace-normal break-words px-4 text-left"
+                  variant="default"
+                >
+                  {feature.name}
+                </Button>
+              </a>
+            ))
+          }
         </div>
       </div>
-    </div>
+    </main>
   )
 }

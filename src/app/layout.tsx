@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
 import { Navbar } from "@/components/layout/navbar"
+import { Analytics } from "@vercel/analytics/next"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,8 +16,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "PC Shop Good Price",
-  description: "Shop PC with good price, wait the delivery on your doorstep!"
+  title: "This is Pisgop",
+  description: "Shop PC with good price, and instant delivery at your doorstep!",
 };
 
 export default function RootLayout({
@@ -24,6 +25,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  console.log("minesota")
   return (
     <html lang="en">
       <head>
