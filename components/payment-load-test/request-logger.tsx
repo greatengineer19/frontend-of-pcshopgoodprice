@@ -34,7 +34,7 @@ export default function RequestLogger({ logs }: RequestLoggerProps) {
         }
     }
 
-    const getSourceLabel = (source: string) {
+    const getSourceLabel = (source: string) => {
         switch (source) {
             case "api1":
                 return "FastAPI"
