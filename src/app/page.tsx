@@ -53,6 +53,9 @@ export default function Home() {
         <h1 className="text-3xl md:text-4xl font-bold text-foreground text-pretty">
           Welcome to Pisgop! Choose a feature you'd like to explore.
         </h1>
+        <h2 className="text-3xl md:text-4xl font-bold text-foreground text-pretty">
+          Maintenance Alert! Per 11 January 2026, website is implementing changes from Monolithic to Microservices, will be up in a few days
+        </h2>
       </header>
 
       <div className="w-full max-w-7xl">
