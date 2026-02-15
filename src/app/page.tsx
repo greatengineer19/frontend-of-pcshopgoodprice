@@ -20,7 +20,7 @@ const features = [
   {
     id: 2,
     name: "Purchase Analytics",
-    description: "AI-powered insights with GPT-4o mini",
+    description: "AI-powered insights with GPT-5 nano",
     href: "/report/purchase_invoices",
     role: "seller",
     icon: FileText,
