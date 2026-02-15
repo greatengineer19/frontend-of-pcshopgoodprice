@@ -51,11 +51,8 @@ export default function Home() {
     <main className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
       <header className="mb-16 text-center">
         <h1 className="text-3xl md:text-4xl font-bold text-foreground text-pretty">
-          Welcome to Pisgop! Choose a feature you'd like to explore.
+          Welcome to our platform, Pisgop! Choose a feature you like to explore.
         </h1>
-        <h2 className="text-l md:text-xl font-bold text-foreground text-pretty">
-          Updates Alert! Per 11 January 2026, backend upgraded from Monolithic (FastAPI) to Microservices (FastAPI plus Ruby on Rails)
-        </h2>
       </header>
 
       <div className="w-full max-w-7xl">

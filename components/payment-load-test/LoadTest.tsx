@@ -1,10 +1,11 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import RequestLogger from "@/components/payment-load-test/RequestLogger"
 import RequestStatusPanel from "@/components/payment-load-test/RequestStatusPanel"
+import { useRailsPaymentChannel } from "@/components/payment-load-test/RailsPaymentChannel"
 
 interface LogEntry {
     id: string
@@ -25,28 +26,31 @@ export default function Page() {
         api2?: { time: string; elapsed: string }
     }>({})
 
-    const ws1Ref = useRef<WebSocket | null>(null)
     const ws2Ref = useRef<WebSocket | null>(null)
-    const cooldownTimerRef = useRef<NodeJS.Timeout | null>(null)
+    const cooldownTimerRef = useRef<NodeJS.Timeout | null>(null);
+    const SECRET_KEY_NAME = 'secret_key';
 
-    // Initialize WebSocket connections
+    // Stable callback for Rails ActionCable messages
+    const handleApi1MessageCallback = useCallback((data: any) => {
+        handleApi1Message(data);
+    }, []);
+
+    // Initialize Rails ActionCable connection
+    useRailsPaymentChannel({
+        onMessage: handleApi1MessageCallback,
+        channelName: "PaymentProgressChannel",
+        room: "general"
+    });
+
+    // Initialize FastAPI WebSocket connection
     useEffect(() => {
-        const connectWebSockets = () => {
+        const connectWebSocket = () => {
             try {
-                ws1Ref.current = new WebSocket("ws://localhost:8000/ws/progress")
-                ws1Ref.current.onmessage = (event) => {
-                    const data = JSON.parse(event.data)
-                    handleApi1Message(data)
-                }
-                ws1Ref.current.onerror = () => {
-                    addLog("Failed to connect to API 1 Websocket", "system")
-                }
-            } catch (error) {
-                addLog("WebSocket connection error for API 1", "system")
-            }
+                const wsUrl = process.env.NODE_ENV === "development"
+                    ? "ws://localhost:8000/ws/progress"
+                    : "wss://api.pcshopgoodprice.com/ws/progress";
 
-            try {
-                ws2Ref.current = new WebSocket("ws://localhost:8000/ws/progress")
+                ws2Ref.current = new WebSocket(wsUrl)
                 ws2Ref.current.onmessage = (event) => {
                     const data = JSON.parse(event.data)
                     handleApi2Message(data)
@@ -57,13 +61,12 @@ export default function Page() {
             } catch (error) {
                 addLog("WebSocket connection error for API 2", "system")
             }
+        }
 
-            connectWebSockets()
+        connectWebSocket()
 
-            return () => {
-                ws1Ref.current?.close()
-                ws2Ref.current?.close()
-            }
+        return () => {
+            ws2Ref.current?.close()
         }
     }, [])
 
@@ -143,16 +146,31 @@ export default function Page() {
         setCompletedRequests({})
 
         try {
-            const api1Promise = fetch("http://localhost:8000/api/process", {
+            let token: string | null = null;
+            if (typeof window !== "undefined") {
+                token = localStorage.getItem(SECRET_KEY_NAME);
+            }
+            const request_uuid = crypto.randomUUID();
+            const api1Link = process.env.NODE_ENV == "development" ? "http://localhost:80/rails/api/payments/bulk_create" : "https://api.pcshopgoodprice.com/rails/api/payments/bulk_create"
+            const api1Promise = fetch(`${api1Link}`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ action: "create_payments", count: 5000 }),
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
+                    "origin": "pcshopgoodprice.com"
+                },
+                body: JSON.stringify({ request_uuid: request_uuid, total_payments: 1 }),
             })
 
-            const api2Promise = fetch("http://localhost:3000/api/process", {
+            const api2Link = process.env.NODE_ENV == "development" ? "http://localhost:80/api/payments/bulk_create" : "https://api.pcshopgoodprice.com/api/payments/bulk_create"
+            const api2Promise = fetch(`${api2Link}`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ action: "create_payments", count: 5000 }),
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
+                    "origin": "pcshopgoodprice.com"
+                },
+                body: JSON.stringify({ request_uuid: request_uuid, total_payments: 1 }),
             })
 
             addLog("Sent request to API 1 (FastAPI)", "api1")
@@ -180,7 +198,7 @@ export default function Page() {
                     }
                     return 0
                 }
-                return prev -1
+                return prev - 1
             })
         }, 1000)
     }
@@ -210,15 +228,15 @@ export default function Page() {
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="flex justify-center gap-4">
-                        <Button 
+                        <Button
                             onClick={handleSubmit}
                             disabled={isLoading || isCoolingDown}
                             size="lg"
                             className="px-8 py-6 text-lg font-semibold"
                         >
-                            { isLoading && "Sending Requests..." }
-                            { isCoolingDown && `Cooldown: ${formatCooldownTime(cooldownTime)}`}
-                            { !isLoading && !isCoolingDown && "Send Requests to Both APIs" }
+                            {isLoading && "Sending Requests..."}
+                            {isCoolingDown && `Cooldown: ${formatCooldownTime(cooldownTime)}`}
+                            {!isLoading && !isCoolingDown && "Send Requests to Both APIs"}
                         </Button>
                     </CardContent>
                 </Card>

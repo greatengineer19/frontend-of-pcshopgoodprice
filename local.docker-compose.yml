@@ -16,5 +16,5 @@ services:
 
 networks:
   app-network:
-    name: pcshopgoodprice_app-network
+    name: pisgop-network
     external: true
