@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "This is Pisgop",
+  title: "Welcome to Pisgop, Commerce & Accounting Solution",
   description: "Shop PC with good price, and instant delivery at your doorstep!",
 };
 
